@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NFT Marketplace
+
+A modern NFT marketplace built with Next.js, TypeScript, and Tailwind CSS.
+
+## Features
+
+- Responsive design for desktop, tablet, and mobile devices
+- Product listing with filtering and search functionality
+- Load more pagination for efficient data loading
+- Auto-refresh data every 60 seconds
+- Proper loading, empty, and error states
+- Dark mode support
+- Unit tests with Jest and React Testing Library
+
+## Technologies Used
+
+- Next.js 15.2
+- TypeScript
+- Tailwind CSS for styling
+- Jest and React Testing Library for testing
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18.0 or later
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository
 
 ```bash
+git clone <repository-url>
+cd nft-marketplace/tymex
+```
+
+2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Start the mock server
+
+```bash
+cd ../tymex-mock-server-nodejs-1_0
+npm install
+npm run start
+```
+
+4. In a separate terminal, start the development server
+
+```bash
+cd ../tymex
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Testing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the tests:
 
-## Learn More
+```bash
+npm test
+# or
+yarn test
+```
 
-To learn more about Next.js, take a look at the following resources:
+Run tests with coverage:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run test:coverage
+# or
+yarn test:coverage
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+- `/src/app`: Next.js app directory structure
+- `/src/components`: Reusable UI components
+- `/src/hooks`: Custom React hooks
+- `/src/types`: TypeScript type definitions
+- `/src/utils`: Utility functions, including API services
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Integration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application connects to a JSON-server mock API running on http://localhost:5005 that provides data for NFT products.
+
+## Features Implemented
+
+### Must Have Features
+
+- Modern UI matching the Figma design
+- Responsive design for all device sizes
+- Data fetching from API
+- Search and filtering
+- "Load more" functionality
+- Loading states, empty states, and error handling
+- Auto-refresh every 60 seconds
+- TypeScript for type safety
+- Well-organized code with separate components
+- Unit test coverage > 40%
+
+### Nice to Have Features
+
+- Basic animations with page transitions and fade effects
+- Multi-criteria search
+- Auto-triggered search when criteria changes
+- Custom hooks for data fetching and debounce
+- Debounce pattern for search inputs
+
+## License
+
+This project is licensed under the MIT License.
