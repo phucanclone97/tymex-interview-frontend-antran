@@ -7,6 +7,7 @@ import CategoryFilter from "@/components/CategoryFilter";
 import SearchBar from "@/components/SearchBar";
 import EmptyState from "@/components/EmptyState";
 import ErrorDisplay from "@/components/ErrorDisplay";
+import PriceRangeFilter from "@/components/PriceRangeFilter";
 import { Category } from "@/types/nft";
 import { useProducts } from "@/hooks/useProducts";
 
@@ -36,6 +37,9 @@ const MarketplacePage = () => {
     setSearchQuery,
     selectedCategory,
     setSelectedCategory,
+    priceRange,
+    setPriceRange,
+    minMaxPrice,
   } = useProducts(12);
 
   // Ensure a category is selected on mount
@@ -48,6 +52,7 @@ const MarketplacePage = () => {
   const handleResetFilter = () => {
     setSelectedCategory("all");
     setSearchQuery("");
+    setPriceRange(minMaxPrice);
   };
 
   return (
@@ -70,6 +75,14 @@ const MarketplacePage = () => {
               categories={categories}
               selectedCategory={selectedCategory}
               onCategoryChange={setSelectedCategory}
+            />
+
+            <PriceRangeFilter
+              minPrice={minMaxPrice[0]}
+              maxPrice={minMaxPrice[1]}
+              currentMin={priceRange[0]}
+              currentMax={priceRange[1]}
+              onPriceChange={(min, max) => setPriceRange([min, max])}
             />
 
             <div className="mt-4">
@@ -126,13 +139,18 @@ const MarketplacePage = () => {
                 </div>
               )}
 
-              {hasMore && !loading && (
+              {hasMore && (
                 <div className="mt-8 text-center">
                   <button
                     onClick={loadMore}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                    disabled={loading}
+                    className={`px-6 py-3 text-white font-medium rounded-lg transition-colors ${
+                      loading
+                        ? "bg-blue-400 cursor-not-allowed"
+                        : "bg-blue-600 hover:bg-blue-700"
+                    }`}
                   >
-                    Load More
+                    {loading ? "Loading..." : "Load More"}
                   </button>
                 </div>
               )}

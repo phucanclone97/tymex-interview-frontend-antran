@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { IProduct } from "@/types/nft";
 import {
   fetchProducts,
@@ -18,33 +18,60 @@ interface UseProductsResult {
   setSearchQuery: (query: string) => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  priceRange: [number, number];
+  setPriceRange: (range: [number, number]) => void;
+  minMaxPrice: [number, number];
 }
 
 export function useProducts(initialLimit = 6): UseProductsResult {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [limit] = useState(initialLimit);
+  const [minMaxPrice, setMinMaxPrice] = useState<[number, number]>([0, 1000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+
+  // Use refs to manage state without triggering re-renders
+  const currentPageRef = useRef(1);
+  const isLoadingRef = useRef(false);
+  const filtersChangedRef = useRef(false);
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const debouncedPriceRange = useDebounce(priceRange, 500);
 
-  const fetchData = useCallback(
+  // Track when filters change
+  useEffect(() => {
+    filtersChangedRef.current = true;
+    currentPageRef.current = 1;
+  }, [debouncedSearchQuery, selectedCategory, debouncedPriceRange]);
+
+  // Main data fetching function
+  const fetchDataImpl = useCallback(
     async (isLoadMore = false) => {
+      // Prevent concurrent fetches
+      if (isLoadingRef.current) return;
+
+      isLoadingRef.current = true;
       setLoading(true);
       setError(null);
 
       try {
+        // If loading more, use the current page + 1, otherwise start from page 1
+        const pageToFetch = isLoadMore ? currentPageRef.current + 1 : 1;
+
         const params: SearchParams = {
-          _page: isLoadMore ? page + 1 : 1,
+          _page: pageToFetch,
           _limit: limit,
           _sort: "createdAt",
           _order: "desc",
+          minPrice: debouncedPriceRange[0],
+          maxPrice: debouncedPriceRange[1],
         };
 
+        console.log(isLoadMore, params);
         if (debouncedSearchQuery) {
           params.q = debouncedSearchQuery;
         }
@@ -53,16 +80,26 @@ export function useProducts(initialLimit = 6): UseProductsResult {
           params.category = selectedCategory;
         }
 
+        console.log(`Fetching page ${pageToFetch}, isLoadMore: ${isLoadMore}`);
         const { data, total } = await fetchProducts(params);
+        console.log(`Received ${data.length} items, total: ${total}`);
 
         setTotalCount(total);
 
         if (isLoadMore) {
+          // Append new data to existing data
           setProducts((prev) => [...prev, ...data]);
-          setPage(page + 1);
+          // Update page after successful fetch
+          currentPageRef.current = pageToFetch;
         } else {
+          // Replace data when not loading more
           setProducts(data);
-          setPage(1);
+          currentPageRef.current = 1;
+        }
+
+        // Reset the filter changed flag after successful fetch
+        if (!isLoadMore) {
+          filtersChangedRef.current = false;
         }
       } catch (err) {
         setError(
@@ -70,30 +107,87 @@ export function useProducts(initialLimit = 6): UseProductsResult {
         );
       } finally {
         setLoading(false);
+        isLoadingRef.current = false;
       }
     },
-    [debouncedSearchQuery, limit, page, selectedCategory]
+    [debouncedSearchQuery, debouncedPriceRange, limit, selectedCategory]
   );
 
+  // Load more function - only triggers if not loading and there's more data
   const loadMore = useCallback(() => {
-    if (!loading && products.length < totalCount) {
-      fetchData(true);
+    if (!isLoadingRef.current && products.length < totalCount) {
+      fetchDataImpl(true);
     }
-  }, [fetchData, loading, products.length, totalCount]);
+  }, [products.length, totalCount]);
 
-  // Initial fetch and when search or category changes
+  // Fetch initial data and handle filter changes
   useEffect(() => {
-    fetchData();
-  }, [debouncedSearchQuery, selectedCategory, fetchData]);
+    // Only fetch when filters have changed
+    if (filtersChangedRef.current) {
+      fetchDataImpl(false);
+    }
+  }, [debouncedSearchQuery, selectedCategory, debouncedPriceRange]);
 
-  // Auto refresh every 60 seconds
+  // Initial data load
   useEffect(() => {
+    fetchDataImpl(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fetch the min and max prices if not set yet
+  useEffect(() => {
+    const fetchPriceRange = async () => {
+      try {
+        const { data } = await fetchProducts({
+          _limit: 1,
+          _sort: "price",
+          _order: "asc",
+        });
+
+        const minPrice = data.length > 0 ? data[0].price : 0;
+
+        const { data: maxData } = await fetchProducts({
+          _limit: 1,
+          _sort: "price",
+          _order: "desc",
+        });
+
+        const maxPrice = maxData.length > 0 ? maxData[0].price : 1000;
+
+        // Add a bit of padding to max price
+        const paddedMaxPrice = Math.ceil(maxPrice * 1.1);
+
+        setMinMaxPrice([minPrice, paddedMaxPrice]);
+        setPriceRange([minPrice, paddedMaxPrice]);
+      } catch (err) {
+        console.error("Error fetching price range:", err);
+      }
+    };
+
+    fetchPriceRange();
+  }, []);
+
+  // Auto refresh every 60 seconds - only when the component is mounted and not during development
+  useEffect(() => {
+    // Don't auto-refresh during development mode
+    if (process.env.NODE_ENV === "development") {
+      return;
+    }
+
     const intervalId = setInterval(() => {
-      fetchData();
+      // Only refresh if not currently loading data
+      if (!isLoadingRef.current) {
+        fetchDataImpl(false);
+      }
     }, AUTO_REFRESH_INTERVAL);
 
-    return () => clearInterval(intervalId);
-  }, [fetchData]);
+    // Clean up interval on component unmount
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, []);
 
   return {
     products,
@@ -106,5 +200,8 @@ export function useProducts(initialLimit = 6): UseProductsResult {
     setSearchQuery,
     selectedCategory,
     setSelectedCategory,
+    priceRange,
+    setPriceRange,
+    minMaxPrice,
   };
 }

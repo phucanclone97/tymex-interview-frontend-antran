@@ -12,6 +12,8 @@ export const AUTO_REFRESH_INTERVAL = parseInt(
 export interface SearchParams {
   q?: string;
   category?: string;
+  minPrice?: number;
+  maxPrice?: number;
   _page?: number;
   _limit?: number;
   _sort?: string;
@@ -24,11 +26,23 @@ export async function fetchProducts(params: SearchParams = {}): Promise<{
 }> {
   const searchParams = new URLSearchParams();
 
-  Object.entries(params).forEach(([key, value]) => {
+  // Handle regular params
+  const { minPrice, maxPrice, ...restParams } = params;
+
+  Object.entries(restParams).forEach(([key, value]) => {
     if (value !== undefined && value !== "") {
       searchParams.append(key, value.toString());
     }
   });
+
+  // Handle price range params
+  if (minPrice !== undefined) {
+    searchParams.append("price_gte", minPrice.toString());
+  }
+
+  if (maxPrice !== undefined) {
+    searchParams.append("price_lte", maxPrice.toString());
+  }
 
   const queryString = searchParams.toString();
   const url = `${API_URL}/products${queryString ? `?${queryString}` : ""}`;

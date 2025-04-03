@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import { IProduct } from "@/types/nft";
 
@@ -7,6 +7,8 @@ interface NFTCardProps {
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
+  const [imageError, setImageError] = useState(false);
+
   // Format price to 2 decimal places
   const formattedPrice = product.price.toFixed(2);
 
@@ -16,10 +18,22 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
   // Format date
   const createdDate = new Date(product.createdAt).toLocaleDateString();
 
-  // Get the right image path
-  const imageSrc = `/api/placeholders?id=${
-    product.imageId
-  }&bg=${getColorForCategory(product.category)}`;
+  // Generate a consistent image URL based on product ID
+  const getImageSrc = useMemo(() => {
+    // Use different placeholder services based on the product category
+    const services = [
+      `https://picsum.photos/seed/${product.id}/400/400`, // Lorem Picsum
+      `https://source.unsplash.com/random/400x400?nft,digital,art&sig=${product.id}`, // Unsplash
+      `https://placeimg.com/400/400/tech?${product.id}`, // PlaceIMG
+    ];
+
+    // Use category to determine which service to use (ensuring consistent selection)
+    const serviceIndex = getCategoryIndex(product.category) % services.length;
+    return services[serviceIndex];
+  }, [product.id, product.category]);
+
+  // Fallback image in case of errors
+  const fallbackImage = "https://placehold.co/400x400/252525/FFFFFF?text=NFT";
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
@@ -45,10 +59,14 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
         </div>
         <div className="h-full w-full bg-gray-200 dark:bg-gray-700">
           <Image
-            src={imageSrc}
+            src={imageError ? fallbackImage : getImageSrc}
             alt={product.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
+            onError={() => setImageError(true)}
+            loading="lazy"
+            unoptimized={true} // Use this to prevent Next.js from optimizing external images
           />
         </div>
       </div>
@@ -61,10 +79,22 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
         <div className="flex items-center mb-3">
           <div className="relative w-6 h-6 rounded-full overflow-hidden mr-2">
             <Image
-              src={product.author.avatar}
+              src={
+                product.author.avatar ||
+                "https://placehold.co/100x100/252525/FFFFFF?text=User"
+              }
               alt={authorName}
               fill
+              sizes="24px"
               className="object-cover"
+              unoptimized={true}
+              loading="lazy"
+              onError={(e) => {
+                // Fallback for avatar images
+                const target = e.target as HTMLImageElement;
+                target.src =
+                  "https://placehold.co/100x100/252525/FFFFFF?text=User";
+              }}
             />
           </div>
           <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -106,21 +136,21 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
   );
 };
 
-// Helper function to get a color based on category
-function getColorForCategory(category: string): string {
-  const categoryColors: Record<string, string> = {
-    "Upper Body": "4285F4", // blue
-    "Lower Body": "34A853", // green
-    Hat: "FBBC05", // yellow
-    Shoes: "EA4335", // red
-    Accessory: "8F44AD", // purple
-    Legendary: "D4AF37", // gold
-    Mythic: "C0C0C0", // silver
-    Epic: "FF5733", // orange
-    Rare: "3498DB", // light blue
-  };
+// Helper function to get a consistent index for a category
+function getCategoryIndex(category: string): number {
+  const categories = [
+    "Upper Body",
+    "Lower Body",
+    "Hat",
+    "Shoes",
+    "Accessory",
+    "Legendary",
+    "Mythic",
+    "Epic",
+    "Rare",
+  ];
 
-  return categoryColors[category] || "404040"; // default dark gray
+  return categories.indexOf(category) !== -1 ? categories.indexOf(category) : 0;
 }
 
 export default NFTCard;
