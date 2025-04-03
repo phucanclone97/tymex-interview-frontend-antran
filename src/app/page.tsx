@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center">
+    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen bg-gray-50 dark:bg-gray-900 p-8 pb-20 sm:p-20">
+      <main className="flex flex-col gap-8 py-12">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-gray-900 dark:text-white">
             Discover Unique NFTs
@@ -13,7 +13,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full mx-auto">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 text-center">
             <div className="flex justify-center mb-4">
               <svg
@@ -84,18 +84,17 @@ export default function Home() {
           </div>
         </div>
 
-        <Link
-          href="/marketplace"
-          className="relative inline-flex items-center justify-center p-4 px-8 py-3 overflow-hidden font-medium text-white bg-blue-600 rounded-lg shadow-md group hover:bg-blue-700 transition-all duration-300 mt-8"
-        >
-          <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-300 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
-          <span className="relative text-lg font-semibold">
-            Explore Marketplace
-          </span>
-        </Link>
+        <div className="text-center mt-8">
+          <Link
+            href="/marketplace"
+            className="inline-flex items-center justify-center px-8 py-3 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
+          >
+            <span className="text-lg font-semibold">Explore Marketplace</span>
+          </Link>
+        </div>
       </main>
 
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center text-gray-600 dark:text-gray-400">
+      <footer className="mt-auto pt-8 text-center text-gray-600 dark:text-gray-400">
         <p>© 2023 NFT Marketplace. All rights reserved.</p>
       </footer>
     </div>

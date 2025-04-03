@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
-        <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen flex flex-col">
           <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
               <Link
@@ -66,7 +66,7 @@ export default function RootLayout({
             </div>
           </header>
 
-          <main className="flex-grow">{children}</main>
+          {children}
         </div>
       </body>
     </html>
