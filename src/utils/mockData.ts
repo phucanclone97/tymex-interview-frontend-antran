@@ -5,22 +5,27 @@ import staticProducts from "../mockData/products.json";
 
 // Cache for the products data
 let productsCache: IProduct[] | null = null;
+let lastCacheTime = 0;
+const CACHE_TTL = 60 * 1000; // 1 minute cache TTL
 
 /**
  * Load products from the mock data file or fallback to static JSON
  */
 export function getProducts(): IProduct[] {
-  // If we already have the data cached, return it
-  if (productsCache) {
+  const now = Date.now();
+
+  // If we have cached data and it's still fresh, use it
+  if (productsCache && now - lastCacheTime < CACHE_TTL) {
     return productsCache;
   }
 
   try {
-    // In Vercel's serverless environment or if we can't read from files,
-    // use the static JSON import
+    // In Vercel's serverless environment, always use the static JSON import
+    // but reset the cache occasionally to ensure fresh data
     if (process.env.VERCEL) {
       console.log("Using static JSON import for Vercel environment");
-      productsCache = staticProducts as IProduct[];
+      productsCache = JSON.parse(JSON.stringify(staticProducts)) as IProduct[];
+      lastCacheTime = now;
       return productsCache;
     }
 
@@ -47,16 +52,19 @@ export function getProducts(): IProduct[] {
 
     if (!dbData) {
       console.log("Could not find db.json, using static JSON import");
-      productsCache = staticProducts as IProduct[];
+      productsCache = JSON.parse(JSON.stringify(staticProducts)) as IProduct[];
+      lastCacheTime = now;
       return productsCache;
     }
 
     productsCache = dbData.products as IProduct[];
+    lastCacheTime = now;
     return productsCache;
   } catch (error) {
     console.error("Error loading mock data:", error);
     console.log("Using static JSON import as fallback");
-    productsCache = staticProducts as IProduct[];
+    productsCache = JSON.parse(JSON.stringify(staticProducts)) as IProduct[];
+    lastCacheTime = now;
     return productsCache;
   }
 }

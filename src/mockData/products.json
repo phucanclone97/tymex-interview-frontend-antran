@@ -188,5 +188,271 @@
       "avatar": "https://robohash.org/doloresvitaeadipisci.png?size=100x100&set=set1",
       "onlineStatus": "online"
     }
+  },
+  {
+    "id": 11,
+    "title": "Quantum Gambit",
+    "category": "Mythic",
+    "price": 177.1,
+    "isFavorite": false,
+    "createdAt": 1712580623000,
+    "theme": "Dark",
+    "tier": "Deluxe",
+    "imageId": 22,
+    "author": {
+      "firstName": "Lindon",
+      "lastName": "Cappel",
+      "email": "lcappel@example.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/facilismagnamnisi.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 12,
+    "title": "Electro Sniper",
+    "category": "Epic",
+    "price": 194.08,
+    "isFavorite": true,
+    "createdAt": 1671209462000,
+    "theme": "Colorful",
+    "tier": "Premium",
+    "imageId": 23,
+    "author": {
+      "firstName": "Patsy",
+      "lastName": "Daniel",
+      "email": "pdaniel@example.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/minusvoluptatemsit.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 13,
+    "title": "Electro Shadow",
+    "category": "Epic",
+    "price": 192.73,
+    "isFavorite": false,
+    "createdAt": 1659012385000,
+    "theme": "Dark",
+    "tier": "Deluxe",
+    "imageId": 24,
+    "author": {
+      "firstName": "Flynn",
+      "lastName": "Dzeniskevich",
+      "email": "fdzeniskevich@example.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/doloremquevelitfugiat.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 14,
+    "title": "Synthwave Outlaw",
+    "category": "Legendary",
+    "price": 151.9,
+    "isFavorite": true,
+    "createdAt": 1700493241000,
+    "theme": "Halloween",
+    "tier": "Premium",
+    "imageId": 25,
+    "author": {
+      "firstName": "Sargent",
+      "lastName": "Matches",
+      "email": "smatches@example.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/eumquisquamiure.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 15,
+    "title": "Glitch Ninja",
+    "category": "Shoes",
+    "price": 3.34,
+    "isFavorite": false,
+    "createdAt": 1707482562000,
+    "theme": "Light",
+    "tier": "Basic",
+    "imageId": 26,
+    "author": {
+      "firstName": "Robyn",
+      "lastName": "Bradborne",
+      "email": "rbradborne@example.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/voluptatemquiasapiente.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 16,
+    "title": "Cyber Pharaoh",
+    "category": "Hat",
+    "price": 105.67,
+    "isFavorite": true,
+    "createdAt": 1682309162000,
+    "theme": "Dark",
+    "tier": "Deluxe",
+    "imageId": 27,
+    "author": {
+      "firstName": "Marie",
+      "lastName": "Johnstone",
+      "email": "mjohnstone@example.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/quosautemvoluptatem.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 17,
+    "title": "Neon Ronin",
+    "category": "Upper Body",
+    "price": 88.45,
+    "isFavorite": false,
+    "createdAt": 1640215384000,
+    "theme": "Halloween",
+    "tier": "Premium",
+    "imageId": 28,
+    "author": {
+      "firstName": "Tristan",
+      "lastName": "Morrey",
+      "email": "tmorrey@example.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/adipisciquiarerum.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 18,
+    "title": "Hextech Guardian",
+    "category": "Accessory",
+    "price": 42.21,
+    "isFavorite": true,
+    "createdAt": 1696159082000,
+    "theme": "Light",
+    "tier": "Basic",
+    "imageId": 29,
+    "author": {
+      "firstName": "Alison",
+      "lastName": "Carrick",
+      "email": "acarrick@example.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/consequaturaliquidesse.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 19,
+    "title": "Binary Phantom",
+    "category": "Legendary",
+    "price": 245.15,
+    "isFavorite": false,
+    "createdAt": 1671836462000,
+    "theme": "Halloween",
+    "tier": "Deluxe",
+    "imageId": 30,
+    "author": {
+      "firstName": "Jerome",
+      "lastName": "Blackwell",
+      "email": "jblackwell@example.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/doloremquiquisquam.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 20,
+    "title": "Future Samurai",
+    "category": "Epic",
+    "price": 112.37,
+    "isFavorite": true,
+    "createdAt": 1707828462000,
+    "theme": "Colorful",
+    "tier": "Premium",
+    "imageId": 31,
+    "author": {
+      "firstName": "Kendra",
+      "lastName": "Myles",
+      "email": "kmyles@example.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/voluptatemreprehenderitut.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 21,
+    "title": "Cyber Warden",
+    "category": "Lower Body",
+    "price": 78.92,
+    "isFavorite": false,
+    "createdAt": 1696504862000,
+    "theme": "Dark",
+    "tier": "Basic",
+    "imageId": 32,
+    "author": {
+      "firstName": "Tyler",
+      "lastName": "Frost",
+      "email": "tfrost@example.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/quiaspernaturdolores.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 22,
+    "title": "Astral Voyager",
+    "category": "Rare",
+    "price": 133.89,
+    "isFavorite": true,
+    "createdAt": 1668703862000,
+    "theme": "Light",
+    "tier": "Deluxe",
+    "imageId": 33,
+    "author": {
+      "firstName": "Lena",
+      "lastName": "Richards",
+      "email": "lrichards@example.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/etenimvoluptatem.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 23,
+    "title": "Digital Drifter",
+    "category": "Shoes",
+    "price": 56.77,
+    "isFavorite": false,
+    "createdAt": 1656161662000,
+    "theme": "Colorful",
+    "tier": "Premium",
+    "imageId": 34,
+    "author": {
+      "firstName": "Quentin",
+      "lastName": "Marshal",
+      "email": "qmarshal@example.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/quaeratmolestiasdolores.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 24,
+    "title": "Techno Wizard",
+    "category": "Hat",
+    "price": 92.65,
+    "isFavorite": true,
+    "createdAt": 1641944462000,
+    "theme": "Halloween",
+    "tier": "Basic",
+    "imageId": 35,
+    "author": {
+      "firstName": "Dana",
+      "lastName": "Cooper",
+      "email": "dcooper@example.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/nihiloditnisi.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
   }
 ]

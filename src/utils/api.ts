@@ -59,7 +59,14 @@ export async function fetchProducts(params: SearchParams = {}): Promise<{
   const url = `${API_URL}/products${queryString ? `?${queryString}` : ""}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Cache-Control": "no-cache, no-store",
+        Pragma: "no-cache",
+      },
+      next: { revalidate: 0 },
+    });
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);

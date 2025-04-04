@@ -4,6 +4,7 @@ import { IProduct } from "@/types/nft";
 
 // This is important for dynamic API routes
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export function GET(request: Request) {
   try {
@@ -115,6 +116,12 @@ export function GET(request: Request) {
     response.headers.set(
       "Access-Control-Expose-Headers",
       "X-Total-Count, X-Pagination-Page, X-Pagination-Limit, X-Pagination-Pages, X-Pagination-Has-More"
+    );
+
+    // Add cache control headers to prevent caching
+    response.headers.set(
+      "Cache-Control",
+      "no-store, max-age=0, must-revalidate"
     );
 
     return response;

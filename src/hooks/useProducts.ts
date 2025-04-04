@@ -122,7 +122,19 @@ export function useProducts(initialLimit = 6): UseProductsResult {
 
         if (isLoadMore) {
           // Append new data to existing data
-          setProducts((prev) => [...prev, ...data]);
+          setProducts((prev) => {
+            // Create a Set of existing product IDs to avoid duplicates
+            const existingIds = new Set(prev.map((product) => product.id));
+
+            // Filter out any products that already exist in the current list
+            const uniqueNewProducts = data.filter(
+              (product) => !existingIds.has(product.id)
+            );
+
+            // Return combined array of existing and new unique products
+            return [...prev, ...uniqueNewProducts];
+          });
+
           // Update page after successful fetch
           currentPageRef.current = pageToFetch;
         } else {
