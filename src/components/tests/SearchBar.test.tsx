@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import SearchBar from "./SearchBar";
+import SearchBar from "../SearchBar";
 
 describe("SearchBar", () => {
   it("renders correctly with default placeholder", () => {
@@ -8,7 +8,7 @@ describe("SearchBar", () => {
     render(<SearchBar value="" onChange={handleChange} />);
 
     const searchInput = screen.getByPlaceholderText("Search NFTs...");
-    expect(searchInput).toBeInTheDocument();
+    expect(searchInput).toBeVisible();
   });
 
   it("renders with custom placeholder", () => {
@@ -22,7 +22,7 @@ describe("SearchBar", () => {
     );
 
     const searchInput = screen.getByPlaceholderText("Custom placeholder");
-    expect(searchInput).toBeInTheDocument();
+    expect(searchInput).toBeVisible();
   });
 
   it("displays the provided value", () => {
@@ -41,5 +41,23 @@ describe("SearchBar", () => {
     fireEvent.change(searchInput, { target: { value: "new search" } });
 
     expect(handleChange).toHaveBeenCalledWith("new search");
+  });
+
+  it("has search icon", () => {
+    render(<SearchBar value="" onChange={() => {}} />);
+
+    const svg = document.querySelector("svg");
+    expect(svg).toBeVisible();
+    expect(svg).toHaveClass("text-gray-400");
+  });
+
+  it("has correct dark styling", () => {
+    render(<SearchBar value="" onChange={() => {}} />);
+
+    const input = screen.getByRole("searchbox");
+    expect(input).toHaveClass("text-white");
+    expect(input).toHaveClass("bg-gray-800");
+    expect(input).toHaveClass("border-none");
+    expect(input).toHaveClass("focus:ring-purple-500");
   });
 });

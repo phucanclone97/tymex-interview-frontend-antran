@@ -1,13 +1,13 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import EmptyState from "./EmptyState";
+import EmptyState from "../EmptyState";
 
 describe("EmptyState", () => {
   it("renders with default props", () => {
     render(<EmptyState />);
 
-    expect(screen.getByText("No results found")).toBeInTheDocument();
-    expect(screen.getByText(/We couldn't find any NFTs/)).toBeInTheDocument();
+    expect(screen.getByText("No results found")).toBeVisible();
+    expect(screen.getByText(/We couldn't find any NFTs/)).toBeVisible();
   });
 
   it("renders with custom title and message", () => {
@@ -16,8 +16,8 @@ describe("EmptyState", () => {
 
     render(<EmptyState title={customTitle} message={customMessage} />);
 
-    expect(screen.getByText(customTitle)).toBeInTheDocument();
-    expect(screen.getByText(customMessage)).toBeInTheDocument();
+    expect(screen.getByText(customTitle)).toBeVisible();
+    expect(screen.getByText(customMessage)).toBeVisible();
   });
 
   it("renders with custom icon", () => {
@@ -25,7 +25,7 @@ describe("EmptyState", () => {
 
     render(<EmptyState icon={customIcon} />);
 
-    expect(screen.getByTestId("custom-icon")).toBeInTheDocument();
-    expect(screen.queryByText("No results found")).toBeInTheDocument();
+    expect(screen.getByTestId("custom-icon")).toBeVisible();
+    expect(screen.queryByText("No results found")).toBeVisible();
   });
 });
