@@ -1,21 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getProductById } from "@/utils/mockData";
 
-interface RouteParams {
-  params: {
-    id: string;
-  };
-}
+// This is important for dynamic API routes
+export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
-  const id = parseInt(params.id);
+// For Next.js 15 App Router - use a simplified handler signature
+export function GET(
+  _request: Request,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  { params }: any
+) {
+  try {
+    const id = parseInt(params.id);
+    const product = getProductById(id);
 
-  // Find the product with the matching ID
-  const product = getProductById(id);
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
 
-  if (!product) {
-    return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    return NextResponse.json(product);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(product);
 }
