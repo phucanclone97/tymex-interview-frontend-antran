@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import { IProduct } from "@/types/nft";
 
@@ -10,9 +10,9 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
   const [imageError, setImageError] = useState(false);
   const [isFavorite, setIsFavorite] = useState(product.isFavorite);
   // Use a consistent date format for initial server rendering
-  const [formattedDate, setFormattedDate] = useState(
-    formatDate(product.createdAt)
-  );
+  // const [formattedDate, setFormattedDate] = useState(
+  //   formatDate(product.createdAt)
+  // );
 
   // Format price to 2 decimal places
   const formattedPrice = product.price.toFixed(2);
@@ -21,10 +21,10 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
   const authorName = `${product.author.firstName} ${product.author.lastName}`;
 
   // Use client-side only date formatting after hydration
-  useEffect(() => {
-    // Only in the browser, update the date with locale-specific formatting
-    setFormattedDate(new Date(product.createdAt).toLocaleDateString());
-  }, [product.createdAt]);
+  // useEffect(() => {
+  //   // Only in the browser, update the date with locale-specific formatting
+  //   setFormattedDate(new Date(product.createdAt).toLocaleDateString());
+  // }, [product.createdAt]);
 
   // Generate a consistent image URL based on product ID
   const getImageSrc = useMemo(() => {
@@ -140,8 +140,8 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
           </div>
           <span className="text-sm text-gray-300">{authorName}</span>
         </div>
-
-        <div className="flex justify-between items-center mt-3">
+        {/* Test UI for Theme and Created Date */}
+        {/* <div className="flex justify-between items-center mt-3">
           <div>
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
               Created
@@ -154,20 +154,20 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
             </div>
             <span className="text-sm dark:text-gray-300">{product.theme}</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
 // Format date in a consistent way for server-side rendering
-function formatDate(timestamp: number): string {
-  const date = new Date(timestamp);
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}-${String(date.getDate()).padStart(2, "0")}`;
-}
+// function formatDate(timestamp: number): string {
+//   const date = new Date(timestamp);
+//   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+//     2,
+//     "0"
+//   )}-${String(date.getDate()).padStart(2, "0")}`;
+// }
 
 // Helper function to get a consistent index for a category
 function getCategoryIndex(category: string): number {
