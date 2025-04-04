@@ -1,8 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const NFTCardSkeleton: React.FC = () => {
-  // Generate a random background color for the skeleton
-  const randomColor = getRandomColor();
+// Predefined colors that will be used for skeletons
+const SKELETON_COLORS = [
+  "#6B46C1", // purple
+  "#3182CE", // blue
+  "#DD6B20", // orange
+  "#E53E3E", // red
+  "#38A169", // green
+  "#F6AD55", // light orange
+  "#F687B3", // pink
+  "#9F7AEA", // lavender
+  "#4299E1", // light blue
+];
+
+const NFTCardSkeleton: React.FC<{ index?: number }> = ({ index = 0 }) => {
+  // Use a deterministic color based on the index prop for server rendering
+  const [bgColor, setBgColor] = useState(
+    SKELETON_COLORS[index % SKELETON_COLORS.length]
+  );
+
+  // Move random color generation to client-side only if no index was provided
+  useEffect(() => {
+    if (index === 0) {
+      // Generate random color only on the client after hydration
+      const randomIndex = Math.floor(Math.random() * SKELETON_COLORS.length);
+      setBgColor(SKELETON_COLORS[randomIndex]);
+    }
+  }, [index]);
 
   return (
     <div className="relative overflow-hidden rounded-xl shadow-lg animate-pulse">
@@ -15,7 +39,7 @@ const NFTCardSkeleton: React.FC = () => {
       {/* Image placeholder with colorful background */}
       <div
         className="relative h-60 w-full"
-        style={{ backgroundColor: randomColor }}
+        style={{ backgroundColor: bgColor }}
       >
         <div className="absolute inset-0 bg-gray-800/20"></div>
       </div>
@@ -39,22 +63,5 @@ const NFTCardSkeleton: React.FC = () => {
     </div>
   );
 };
-
-// Helper function to get a random color for the skeleton
-function getRandomColor(): string {
-  const colors = [
-    "#6B46C1", // purple
-    "#3182CE", // blue
-    "#DD6B20", // orange
-    "#E53E3E", // red
-    "#38A169", // green
-    "#F6AD55", // light orange
-    "#F687B3", // pink
-    "#9F7AEA", // lavender
-    "#4299E1", // light blue
-  ];
-
-  return colors[Math.floor(Math.random() * colors.length)];
-}
 
 export default NFTCardSkeleton;

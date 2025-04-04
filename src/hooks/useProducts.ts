@@ -4,6 +4,7 @@ import {
   fetchProducts,
   SearchParams,
   AUTO_REFRESH_INTERVAL,
+  PaginationData,
 } from "@/utils/api";
 import { useDebounce } from "./useDebounce";
 
@@ -25,6 +26,7 @@ interface UseProductsResult {
   priceRange: [number, number];
   setPriceRange: (range: [number, number]) => void;
   minMaxPrice: [number, number];
+  pagination: PaginationData;
 }
 
 export function useProducts(initialLimit = 6): UseProductsResult {
@@ -32,6 +34,13 @@ export function useProducts(initialLimit = 6): UseProductsResult {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [totalCount, setTotalCount] = useState(0);
+  const [pagination, setPagination] = useState<PaginationData>({
+    total: 0,
+    page: 1,
+    limit: initialLimit,
+    pages: 1,
+    hasMore: false,
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedTier, setSelectedTier] = useState("All Tiers");
@@ -101,10 +110,15 @@ export function useProducts(initialLimit = 6): UseProductsResult {
         }
 
         console.log(`Fetching page ${pageToFetch}, isLoadMore: ${isLoadMore}`);
-        const { data, total } = await fetchProducts(params);
+        const {
+          data,
+          total,
+          pagination: paginationData,
+        } = await fetchProducts(params);
         console.log(`Received ${data.length} items, total: ${total}`);
 
         setTotalCount(total);
+        setPagination(paginationData);
 
         if (isLoadMore) {
           // Append new data to existing data
@@ -142,10 +156,10 @@ export function useProducts(initialLimit = 6): UseProductsResult {
 
   // Load more function - only triggers if not loading and there's more data
   const loadMore = useCallback(() => {
-    if (!isLoadingRef.current && products.length < totalCount) {
+    if (!isLoadingRef.current && pagination.hasMore) {
       fetchDataImpl(true);
     }
-  }, [products.length, totalCount]);
+  }, [pagination.hasMore]);
 
   // Fetch initial data and handle filter changes
   useEffect(() => {
@@ -227,7 +241,7 @@ export function useProducts(initialLimit = 6): UseProductsResult {
     loading,
     error,
     totalCount,
-    hasMore: products.length < totalCount,
+    hasMore: pagination.hasMore,
     loadMore,
     searchQuery,
     setSearchQuery,
@@ -240,5 +254,6 @@ export function useProducts(initialLimit = 6): UseProductsResult {
     priceRange,
     setPriceRange,
     minMaxPrice,
+    pagination,
   };
 }

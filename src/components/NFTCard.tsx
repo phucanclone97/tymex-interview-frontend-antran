@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { IProduct } from "@/types/nft";
 
@@ -9,6 +9,10 @@ interface NFTCardProps {
 const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
   const [imageError, setImageError] = useState(false);
   const [isFavorite, setIsFavorite] = useState(product.isFavorite);
+  // Use a consistent date format for initial server rendering
+  const [formattedDate, setFormattedDate] = useState(
+    formatDate(product.createdAt)
+  );
 
   // Format price to 2 decimal places
   const formattedPrice = product.price.toFixed(2);
@@ -16,8 +20,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
   // Get author full name
   const authorName = `${product.author.firstName} ${product.author.lastName}`;
 
-  // Format date
-  const createdDate = new Date(product.createdAt).toLocaleDateString();
+  // Use client-side only date formatting after hydration
+  useEffect(() => {
+    // Only in the browser, update the date with locale-specific formatting
+    setFormattedDate(new Date(product.createdAt).toLocaleDateString());
+  }, [product.createdAt]);
 
   // Generate a consistent image URL based on product ID
   const getImageSrc = useMemo(() => {
@@ -139,7 +146,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
               Created
             </div>
-            <div className="text-sm dark:text-gray-300">{createdDate}</div>
+            <div className="text-sm dark:text-gray-300">{formattedDate}</div>
           </div>
           <div className="text-right">
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
@@ -152,6 +159,15 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
     </div>
   );
 };
+
+// Format date in a consistent way for server-side rendering
+function formatDate(timestamp: number): string {
+  const date = new Date(timestamp);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}-${String(date.getDate()).padStart(2, "0")}`;
+}
 
 // Helper function to get a consistent index for a category
 function getCategoryIndex(category: string): number {

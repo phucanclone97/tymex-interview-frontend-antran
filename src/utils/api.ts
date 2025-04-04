@@ -22,9 +22,18 @@ export interface SearchParams {
   _order?: "asc" | "desc";
 }
 
+export interface PaginationData {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+  hasMore: boolean;
+}
+
 export async function fetchProducts(params: SearchParams = {}): Promise<{
   data: IProduct[];
   total: number;
+  pagination: PaginationData;
 }> {
   const searchParams = new URLSearchParams();
 
@@ -57,9 +66,24 @@ export async function fetchProducts(params: SearchParams = {}): Promise<{
     }
 
     const total = Number(response.headers.get("X-Total-Count") || "0");
+    const page = Number(response.headers.get("X-Pagination-Page") || "1");
+    const limit = Number(response.headers.get("X-Pagination-Limit") || "12");
+    const pages = Number(response.headers.get("X-Pagination-Pages") || "1");
+    const hasMore = response.headers.get("X-Pagination-Has-More") === "true";
+
     const data = await response.json();
 
-    return { data, total };
+    return {
+      data,
+      total,
+      pagination: {
+        total,
+        page,
+        limit,
+        pages,
+        hasMore,
+      },
+    };
   } catch (error) {
     console.error("Error fetching products:", error);
     throw error;

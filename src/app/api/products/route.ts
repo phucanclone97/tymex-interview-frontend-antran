@@ -69,10 +69,16 @@ export function GET(request: Request) {
         const fieldA = a[sort as keyof IProduct];
         const fieldB = b[sort as keyof IProduct];
 
+        // Use a consistent sorting approach for both server and client
         if (typeof fieldA === "string" && typeof fieldB === "string") {
+          // Use simple string comparison instead of locale-specific
           return order === "desc"
-            ? fieldB.localeCompare(fieldA)
-            : fieldA.localeCompare(fieldB);
+            ? fieldB > fieldA
+              ? 1
+              : -1
+            : fieldA > fieldB
+            ? 1
+            : -1;
         } else {
           return order === "desc"
             ? Number(fieldB) - Number(fieldA)
@@ -83,6 +89,7 @@ export function GET(request: Request) {
 
     // Pagination
     const page = parseInt(searchParams.get("_page") || "1");
+    // Support larger limit for View More functionality
     const limit = parseInt(searchParams.get("_limit") || "12");
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
@@ -91,6 +98,24 @@ export function GET(request: Request) {
     // Create response with pagination headers
     const response = NextResponse.json(paginatedResults);
     response.headers.set("X-Total-Count", filteredProducts.length.toString());
+
+    // Add additional pagination data
+    response.headers.set("X-Pagination-Page", page.toString());
+    response.headers.set("X-Pagination-Limit", limit.toString());
+    response.headers.set(
+      "X-Pagination-Pages",
+      Math.ceil(filteredProducts.length / limit).toString()
+    );
+    response.headers.set(
+      "X-Pagination-Has-More",
+      (endIndex < filteredProducts.length).toString()
+    );
+
+    // Add CORS headers to ensure the frontend can access these custom headers
+    response.headers.set(
+      "Access-Control-Expose-Headers",
+      "X-Total-Count, X-Pagination-Page, X-Pagination-Limit, X-Pagination-Pages, X-Pagination-Has-More"
+    );
 
     return response;
   } catch (error) {
