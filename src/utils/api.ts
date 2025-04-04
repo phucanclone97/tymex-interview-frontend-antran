@@ -72,11 +72,29 @@ export async function fetchProducts(params: SearchParams = {}): Promise<{
       throw new Error(`API error: ${response.status}`);
     }
 
-    const total = Number(response.headers.get("X-Total-Count") || "0");
-    const page = Number(response.headers.get("X-Pagination-Page") || "1");
-    const limit = Number(response.headers.get("X-Pagination-Limit") || "12");
-    const pages = Number(response.headers.get("X-Pagination-Pages") || "1");
-    const hasMore = response.headers.get("X-Pagination-Has-More") === "true";
+    // Parse header values, supporting both uppercase and lowercase header formats
+    const getHeaderValue = (name: string): string | null => {
+      return (
+        response.headers.get(name) ||
+        response.headers.get(name.toLowerCase()) ||
+        response.headers.get(name.toUpperCase()) ||
+        null
+      );
+    };
+
+    const total = Number(getHeaderValue("x-total-count") || "0");
+    const page = Number(
+      getHeaderValue("x-pagination-current") ||
+        getHeaderValue("x-pagination-page") ||
+        "1"
+    );
+    const limit = Number(
+      getHeaderValue("x-pagination-limit") || params._limit?.toString() || "12"
+    );
+    const pages = Number(getHeaderValue("x-pagination-pages") || "1");
+
+    // Calculate has more based on current page and total pages
+    const hasMore = page < pages;
 
     const data = await response.json();
 

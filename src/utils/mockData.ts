@@ -6,7 +6,7 @@ import staticProducts from "../mockData/products.json";
 // Cache for the products data
 let productsCache: IProduct[] | null = null;
 let lastCacheTime = 0;
-const CACHE_TTL = 60 * 1000; // 1 minute cache TTL
+const CACHE_TTL = 10 * 1000; // 10 seconds cache TTL for testing
 
 /**
  * Load products from the mock data file or fallback to static JSON
@@ -21,9 +21,10 @@ export function getProducts(): IProduct[] {
 
   try {
     // In Vercel's serverless environment, always use the static JSON import
-    // but reset the cache occasionally to ensure fresh data
+    // Reset the cache for each request to ensure fresh data
     if (process.env.VERCEL) {
       console.log("Using static JSON import for Vercel environment");
+      // Important: Create a deep copy to avoid reference issues
       productsCache = JSON.parse(JSON.stringify(staticProducts)) as IProduct[];
       lastCacheTime = now;
       return productsCache;

@@ -1,134 +1,108 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getProducts } from "@/utils/mockData";
 import { IProduct } from "@/types/nft";
 
-// This is important for dynamic API routes
+// This ensures the API route is not cached and is always evaluated
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const products = getProducts();
+    const searchParams = request.nextUrl.searchParams;
+    const page = parseInt(searchParams.get("_page") || "1", 10);
+    const limit = parseInt(searchParams.get("_limit") || "10", 10);
+    const sort = searchParams.get("_sort") || "createdAt";
+    const order = searchParams.get("_order") || "desc";
+    const query = searchParams.get("q") || "";
+    const category = searchParams.get("category") || "";
+    const tier = searchParams.get("tier") || "";
+    const theme = searchParams.get("theme") || "";
+    const minPrice = parseFloat(searchParams.get("price_gte") || "0");
+    const maxPrice = parseFloat(searchParams.get("price_lte") || "1000");
 
-    let filteredProducts = [...products];
+    // Get all products
+    const allProducts = getProducts();
 
-    // Text search
-    const q = searchParams.get("q");
-    if (q && q.trim() !== "") {
-      const searchTerm = q.toLowerCase().trim();
-      filteredProducts = filteredProducts.filter((product: IProduct) =>
-        product.title.toLowerCase().includes(searchTerm)
+    // Filter products based on search query and other filters
+    const filteredProducts = allProducts.filter((product: IProduct) => {
+      // Search by title if query exists
+      const matchesQuery = query
+        ? product.title.toLowerCase().includes(query.toLowerCase())
+        : true;
+
+      // Filter by category if specified
+      const matchesCategory =
+        category && category !== "all"
+          ? product.category.toLowerCase() === category.toLowerCase()
+          : true;
+
+      // Filter by tier if specified
+      const matchesTier = tier
+        ? product.tier.toLowerCase() === tier.toLowerCase()
+        : true;
+
+      // Filter by theme if specified
+      const matchesTheme = theme
+        ? product.theme.toLowerCase() === theme.toLowerCase()
+        : true;
+
+      // Filter by price range
+      const matchesPrice =
+        product.price >= minPrice &&
+        (isNaN(maxPrice) || product.price <= maxPrice);
+
+      return (
+        matchesQuery &&
+        matchesCategory &&
+        matchesTier &&
+        matchesTheme &&
+        matchesPrice
       );
-    }
+    });
 
-    // Category filter
-    const category = searchParams.get("category");
-    if (category && category !== "all") {
-      filteredProducts = filteredProducts.filter(
-        (product: IProduct) => product.category === category
-      );
-    }
+    // Sort products
+    filteredProducts.sort((a: IProduct, b: IProduct) => {
+      const aValue = a[sort as keyof IProduct];
+      const bValue = b[sort as keyof IProduct];
 
-    // Tier filter
-    const tier = searchParams.get("tier");
-    if (tier && tier !== "all") {
-      filteredProducts = filteredProducts.filter(
-        (product: IProduct) => product.tier === tier
-      );
-    }
+      if (order === "asc") {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
 
-    // Theme filter
-    const theme = searchParams.get("theme");
-    if (theme && theme !== "all") {
-      filteredProducts = filteredProducts.filter(
-        (product: IProduct) => product.theme === theme
-      );
-    }
-
-    // Price range filters
-    const minPrice = searchParams.get("price_gte");
-    if (minPrice) {
-      filteredProducts = filteredProducts.filter(
-        (product: IProduct) => product.price >= parseFloat(minPrice)
-      );
-    }
-
-    const maxPrice = searchParams.get("price_lte");
-    if (maxPrice) {
-      filteredProducts = filteredProducts.filter(
-        (product: IProduct) => product.price <= parseFloat(maxPrice)
-      );
-    }
-
-    // Sorting
-    const sort = searchParams.get("_sort");
-    const order = searchParams.get("_order") as "asc" | "desc";
-
-    if (sort) {
-      filteredProducts.sort((a: IProduct, b: IProduct) => {
-        const fieldA = a[sort as keyof IProduct];
-        const fieldB = b[sort as keyof IProduct];
-
-        // Use a consistent sorting approach for both server and client
-        if (typeof fieldA === "string" && typeof fieldB === "string") {
-          // Use simple string comparison instead of locale-specific
-          return order === "desc"
-            ? fieldB > fieldA
-              ? 1
-              : -1
-            : fieldA > fieldB
-            ? 1
-            : -1;
-        } else {
-          return order === "desc"
-            ? Number(fieldB) - Number(fieldA)
-            : Number(fieldA) - Number(fieldB);
-        }
-      });
-    }
-
-    // Pagination
-    const page = parseInt(searchParams.get("_page") || "1");
-    // Support larger limit for View More functionality
-    const limit = parseInt(searchParams.get("_limit") || "12");
+    // Paginate
     const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedResults = filteredProducts.slice(startIndex, endIndex);
+    const endIndex = page * limit;
+    const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+    const totalCount = filteredProducts.length;
 
-    // Create response with pagination headers
-    const response = NextResponse.json(paginatedResults);
-    response.headers.set("X-Total-Count", filteredProducts.length.toString());
+    // Create response with proper headers for pagination
+    const response = NextResponse.json(paginatedProducts);
 
-    // Add additional pagination data
-    response.headers.set("X-Pagination-Page", page.toString());
-    response.headers.set("X-Pagination-Limit", limit.toString());
+    // Set headers for pagination info and CORS
+    response.headers.set("x-total-count", totalCount.toString());
     response.headers.set(
-      "X-Pagination-Pages",
-      Math.ceil(filteredProducts.length / limit).toString()
+      "access-control-expose-headers",
+      "x-total-count, x-pagination-pages"
     );
     response.headers.set(
-      "X-Pagination-Has-More",
-      (endIndex < filteredProducts.length).toString()
+      "x-pagination-pages",
+      Math.ceil(totalCount / limit).toString()
     );
-
-    // Add CORS headers to ensure the frontend can access these custom headers
+    response.headers.set("x-pagination-current", page.toString());
     response.headers.set(
-      "Access-Control-Expose-Headers",
-      "X-Total-Count, X-Pagination-Page, X-Pagination-Limit, X-Pagination-Pages, X-Pagination-Has-More"
+      "cache-control",
+      "no-cache, no-store, must-revalidate"
     );
-
-    // Add cache control headers to prevent caching
-    response.headers.set(
-      "Cache-Control",
-      "no-store, max-age=0, must-revalidate"
-    );
+    response.headers.set("pragma", "no-cache");
 
     return response;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error processing request:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
