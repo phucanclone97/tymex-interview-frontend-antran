@@ -86,34 +86,58 @@ export default function Home() {
           <h1 className="text-3xl font-bold dark:text-white">
             NFT Marketplace
           </h1>
-          <div className="w-full md:w-80"></div>
         </div>
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div className="w-full md:w-80">
+
+        {/* Search bar and Category filter in the same row */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 w-full">
+          <div className="w-full md:w-1/3">
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder="Search NFTs..."
             />
           </div>
-          <CategoryFilter
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-          />
+          <div className="w-full md:w-2/3 overflow-x-auto">
+            <CategoryFilter
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+            />
+          </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        {/* Main content grid with filters and NFTs */}
+        <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar filters */}
-          <div className="lg:col-span-1 order-2 lg:order-1">
-            <div className="sticky top-4 space-y-6">
+          <div className="w-full md:w-1/4">
+            <div className="space-y-6">
               {/* Price Range Filter */}
-              <PriceRangeFilter
-                minPrice={minMaxPrice[0]}
-                maxPrice={minMaxPrice[1]}
-                currentMin={priceRange[0]}
-                currentMax={priceRange[1]}
-                onPriceChange={(min, max) => setPriceRange([min, max])}
-              />
+              <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Price Range
+                </h3>
+                <PriceRangeFilter
+                  minPrice={minMaxPrice[0]}
+                  maxPrice={minMaxPrice[1]}
+                  currentMin={priceRange[0]}
+                  currentMax={priceRange[1]}
+                  onPriceChange={(min, max) => setPriceRange([min, max])}
+                />
+
+                <div className="mt-4">
+                  <button
+                    onClick={() => {
+                      setSelectedCategory("all");
+                      setSelectedTier("All Tiers");
+                      setSelectedTheme("All Themes");
+                      setPriceRange([minMaxPrice[0], minMaxPrice[1]]);
+                    }}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              </div>
 
               {/* Tier Filter Dropdown */}
               <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
@@ -197,8 +221,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Main content area */}
-          <div className="lg:col-span-3 order-1 lg:order-2">
+          {/* Main content area - NFT Cards */}
+          <div className="w-full md:w-3/4">
             {error && (
               <ErrorDisplay
                 onRetry={() => {
