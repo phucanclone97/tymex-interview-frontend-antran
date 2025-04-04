@@ -21,3 +21,6 @@ jest.mock("next/navigation", () => ({
   usePathname: () => "",
   useSearchParams: () => new URLSearchParams(),
 }));
+
+// Suppress React act() warnings
+global.IS_REACT_ACT_ENVIRONMENT = true;
