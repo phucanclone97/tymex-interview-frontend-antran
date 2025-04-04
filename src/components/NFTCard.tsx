@@ -92,6 +92,8 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
           src={imageError ? fallbackImage : getImageSrc}
           alt={product.title}
           fill
+          placeholder="blur"
+          blurDataURL={getImageSrc}
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-cover hover:scale-110 transition-transform duration-300"
           onError={() => setImageError(true)}

@@ -138,20 +138,7 @@ export default function Home() {
                     onPriceChange={(min, max) => setPriceRange([min, max])}
                   />
 
-                  <div className="mt-4">
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("all");
-                        setSelectedTier("All Tiers");
-                        setSelectedTheme("All Themes");
-                        setPriceRange([minMaxPrice[0], minMaxPrice[1]]);
-                      }}
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors"
-                      disabled={loading}
-                    >
-                      Reset Filters
-                    </button>
-                  </div>
+                  {/* <div className="mt-4"></div> */}
                 </div>
 
                 {/* Tier Filter Dropdown */}
@@ -253,6 +240,18 @@ export default function Home() {
                     </p>
                   </div>
                 )}
+                <button
+                  onClick={() => {
+                    setSelectedCategory("all");
+                    setSelectedTier("All Tiers");
+                    setSelectedTheme("All Themes");
+                    setPriceRange([minMaxPrice[0], minMaxPrice[1]]);
+                  }}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors"
+                  disabled={loading}
+                >
+                  Reset Filters
+                </button>
               </div>
             </div>
 
