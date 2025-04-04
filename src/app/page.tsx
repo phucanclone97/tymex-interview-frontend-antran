@@ -280,9 +280,9 @@ export default function Home() {
                 loading &&
                 products.length === 0 &&
                 !initialLoading && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[...Array(6)].map((_, index) => (
-                      <NFTCardSkeleton key={index} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                    {[...Array(8)].map((_, index) => (
+                      <NFTCardSkeleton key={index} index={index} />
                     ))}
                   </div>
                 )}
@@ -291,16 +291,19 @@ export default function Home() {
 
               {!error && products.length > 0 && (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                     {products.map((product) => (
                       <NFTCard key={product.id} product={product} />
                     ))}
                   </div>
 
                   {loading && !initialLoading && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                      {[...Array(3)].map((_, index) => (
-                        <NFTCardSkeleton key={`loading-${index}`} />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mt-6">
+                      {[...Array(4)].map((_, index) => (
+                        <NFTCardSkeleton
+                          key={`loading-${index}`}
+                          index={index}
+                        />
                       ))}
                     </div>
                   )}
