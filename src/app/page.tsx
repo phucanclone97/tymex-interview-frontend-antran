@@ -98,6 +98,9 @@ export default function Home() {
           <h1 className="text-3xl font-bold dark:text-white">
             NFT Marketplace
           </h1>
+          <div className="w-full md:w-80"></div>
+        </div>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div className="w-full md:w-80">
             <SearchBar
               value={searchQuery}
@@ -105,33 +108,16 @@ export default function Home() {
               placeholder="Search NFTs..."
             />
           </div>
-        </div>
-
-        {/* Category filter as horizontal carousel */}
-        <div className="mb-8">
           <CategoryFilter
             categories={categories}
             selectedCategory={selectedCategory}
             onCategoryChange={setSelectedCategory}
           />
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar filters */}
           <div className="lg:col-span-1 order-2 lg:order-1">
             <div className="sticky top-4 space-y-6">
-              {/* Search box moved above price filter */}
-              <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
-                <h3 className="text-xl font-semibold text-white mb-4">
-                  Search
-                </h3>
-                <SearchBar
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  placeholder="Find NFTs..."
-                />
-              </div>
-
               {/* Price Range Filter */}
               <PriceRangeFilter
                 minPrice={minMaxPrice[0]}
