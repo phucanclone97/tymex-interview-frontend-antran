@@ -1,100 +1,286 @@
-import Link from "next/link";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Banner from "@/components/Banner";
+import NFTCard from "@/components/NFTCard";
+import NFTCardSkeleton from "@/components/NFTCardSkeleton";
+import CategoryFilter from "@/components/CategoryFilter";
+import SearchBar from "@/components/SearchBar";
+import EmptyState from "@/components/EmptyState";
+import ErrorDisplay from "@/components/ErrorDisplay";
+import PriceRangeFilter from "@/components/PriceRangeFilter";
+import { Category } from "@/types/nft";
+import { useProducts } from "@/hooks/useProducts";
+
+// Define categories based on the mock server data
+const categories: Category[] = [
+  { id: "all", label: "All" },
+  { id: "Upper Body", label: "Upper Body" },
+  { id: "Lower Body", label: "Lower Body" },
+  { id: "Hat", label: "Hat" },
+  { id: "Shoes", label: "Shoes" },
+  { id: "Accessory", label: "Accessory" },
+  { id: "Legendary", label: "Legendary" },
+  { id: "Mythic", label: "Mythic" },
+  { id: "Epic", label: "Epic" },
+  { id: "Rare", label: "Rare" },
+];
+
+// Filter options
+const tierOptions = [
+  "All Tiers",
+  "Legendary",
+  "Mythic",
+  "Epic",
+  "Rare",
+  "Common",
+];
+const themeOptions = [
+  "All Themes",
+  "Fantasy",
+  "Sci-Fi",
+  "Cyberpunk",
+  "Medieval",
+  "Modern",
+];
+const timeOptions = [
+  "All Time",
+  "Last 24h",
+  "Last 7 days",
+  "Last 30 days",
+  "Last Year",
+];
+const sortOptions = [
+  "Default",
+  "Price: High to Low",
+  "Price: Low to High",
+  "Newest First",
+  "Oldest First",
+];
 
 export default function Home() {
+  const {
+    products,
+    loading,
+    error,
+    totalCount,
+    hasMore,
+    loadMore,
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    priceRange,
+    setPriceRange,
+    minMaxPrice,
+  } = useProducts(12);
+
+  // Additional filter states
+  const [selectedTier, setSelectedTier] = useState("All Tiers");
+  const [selectedTheme, setSelectedTheme] = useState("All Themes");
+  const [selectedTime, setSelectedTime] = useState("All Time");
+  const [selectedSort, setSelectedSort] = useState("Default");
+
+  // Ensure a category is selected on mount
+  useEffect(() => {
+    if (!selectedCategory) {
+      setSelectedCategory("all");
+    }
+  }, [selectedCategory, setSelectedCategory]);
+
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen bg-gray-50 dark:bg-gray-900 p-8 pb-20 sm:p-20">
-      <main className="flex flex-col gap-8 py-12">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-gray-900 dark:text-white">
-            Discover Unique NFTs
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Banner at the top */}
+      <Banner characterImageUrl="/images/nft-character.svg" />
+
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <h1 className="text-3xl font-bold dark:text-white">
+            NFT Marketplace
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-            Explore and collect digital assets on our NFT marketplace
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full mx-auto">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 text-center">
-            <div className="flex justify-center mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-12 h-12 text-blue-500"
-              >
-                <path d="M11.644 1.59a.75.75 0 01.712 0l9.75 5.25a.75.75 0 010 1.32l-9.75 5.25a.75.75 0 01-.712 0l-9.75-5.25a.75.75 0 010-1.32l9.75-5.25z" />
-                <path d="M3.265 10.602l7.668 4.129a2.25 2.25 0 002.134 0l7.668-4.13 1.37.739a.75.75 0 010 1.32l-9.75 5.25a.75.75 0 01-.71 0l-9.75-5.25a.75.75 0 010-1.32l1.37-.738z" />
-                <path d="M10.933 19.231l-7.668-4.13-1.37.739a.75.75 0 000 1.32l9.75 5.25c.221.12.489.12.71 0l9.75-5.25a.75.75 0 000-1.32l-1.37-.738-7.668 4.13a2.25 2.25 0 01-2.134-.001z" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold mb-2 dark:text-white">
-              Browse Collections
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Discover unique digital items across multiple categories
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 text-center">
-            <div className="flex justify-center mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-12 h-12 text-blue-500"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold mb-2 dark:text-white">
-              Find Creators
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Connect with talented artists and digital creators
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 text-center">
-            <div className="flex justify-center mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-12 h-12 text-blue-500"
-              >
-                <path d="M12 7.5a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
-                <path
-                  fillRule="evenodd"
-                  d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 011.5 14.625v-9.75zM8.25 9.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM18.75 9a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V9.75a.75.75 0 00-.75-.75h-.008zM4.5 9.75A.75.75 0 015.25 9h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H5.25a.75.75 0 01-.75-.75V9.75z"
-                  clipRule="evenodd"
-                />
-                <path d="M2.25 18a.75.75 0 000 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 00-.75-.75H2.25z" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold mb-2 dark:text-white">
-              Buy & Sell
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Trade unique digital items with our secure platform
-            </p>
+          <div className="w-full md:w-80">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search NFTs..."
+            />
           </div>
         </div>
 
-        <div className="text-center mt-8">
-          <Link
-            href="/marketplace"
-            className="inline-flex items-center justify-center px-8 py-3 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
-          >
-            <span className="text-lg font-semibold">Explore Marketplace</span>
-          </Link>
+        {/* Category filter as horizontal carousel */}
+        <div className="mb-8">
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar filters */}
+          <div className="lg:col-span-1 order-2 lg:order-1">
+            <div className="sticky top-4 space-y-6">
+              {/* Search box moved above price filter */}
+              <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Search
+                </h3>
+                <SearchBar
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder="Find NFTs..."
+                />
+              </div>
+
+              {/* Price Range Filter */}
+              <PriceRangeFilter
+                minPrice={minMaxPrice[0]}
+                maxPrice={minMaxPrice[1]}
+                currentMin={priceRange[0]}
+                currentMax={priceRange[1]}
+                onPriceChange={(min, max) => setPriceRange([min, max])}
+              />
+
+              {/* Tier Filter Dropdown */}
+              <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
+                <h3 className="text-xl font-semibold text-white mb-4">Tier</h3>
+                <select
+                  value={selectedTier}
+                  onChange={(e) => setSelectedTier(e.target.value)}
+                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  {tierOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Theme Filter Dropdown */}
+              <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
+                <h3 className="text-xl font-semibold text-white mb-4">Theme</h3>
+                <select
+                  value={selectedTheme}
+                  onChange={(e) => setSelectedTheme(e.target.value)}
+                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  {themeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Time Filter Dropdown */}
+              <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
+                <h3 className="text-xl font-semibold text-white mb-4">Time</h3>
+                <select
+                  value={selectedTime}
+                  onChange={(e) => setSelectedTime(e.target.value)}
+                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  {timeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Sort By
+                </h3>
+                <select
+                  value={selectedSort}
+                  onChange={(e) => setSelectedSort(e.target.value)}
+                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  {sortOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {!loading && !error && products.length > 0 && (
+                <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
+                  <p className="text-lg text-gray-300">
+                    Showing{" "}
+                    <span className="font-bold text-white">
+                      {products.length}
+                    </span>{" "}
+                    of{" "}
+                    <span className="font-bold text-white">{totalCount}</span>{" "}
+                    results
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Main content area */}
+          <div className="lg:col-span-3 order-1 lg:order-2">
+            {error && (
+              <ErrorDisplay
+                onRetry={() => {
+                  setSelectedCategory(selectedCategory);
+                }}
+              />
+            )}
+
+            {!error && loading && products.length === 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, index) => (
+                  <NFTCardSkeleton key={index} />
+                ))}
+              </div>
+            )}
+
+            {!error && !loading && products.length === 0 && <EmptyState />}
+
+            {!error && products.length > 0 && (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {products.map((product) => (
+                    <NFTCard key={product.id} product={product} />
+                  ))}
+                </div>
+
+                {loading && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                    {[...Array(3)].map((_, index) => (
+                      <NFTCardSkeleton key={`loading-${index}`} />
+                    ))}
+                  </div>
+                )}
+
+                {hasMore && (
+                  <div className="mt-8 text-center">
+                    <button
+                      onClick={loadMore}
+                      disabled={loading}
+                      className={`px-6 py-3 text-white font-medium rounded-lg transition-colors ${
+                        loading
+                          ? "bg-purple-400 cursor-not-allowed"
+                          : "bg-purple-600 hover:bg-purple-700"
+                      }`}
+                    >
+                      {loading ? "Loading..." : "Load More"}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </main>
 
-      <footer className="mt-auto pt-8 text-center text-gray-600 dark:text-gray-400">
+      <footer className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-8 text-center text-gray-500 dark:text-gray-400">
         <p>© 2023 NFT Marketplace. All rights reserved.</p>
       </footer>
     </div>

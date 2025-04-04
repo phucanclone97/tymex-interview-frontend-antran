@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 interface PriceRangeFilterProps {
   minPrice: number;
@@ -15,168 +15,146 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
   currentMin,
   currentMax,
 }) => {
-  const [min, setMin] = useState<number>(currentMin);
-  const [max, setMax] = useState<number>(currentMax);
+  // Local state for the sliders
   const [localMin, setLocalMin] = useState<number>(currentMin);
   const [localMax, setLocalMax] = useState<number>(currentMax);
 
-  // Update the component state when props change
-  useEffect(() => {
-    setMin(currentMin);
-    setLocalMin(currentMin);
-    setMax(currentMax);
-    setLocalMax(currentMax);
-  }, [currentMin, currentMax]);
-
-  // Handle local changes without triggering API calls
-  const handleLocalMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    // Ensure min doesn't exceed max
-    const newMin = Math.min(value, localMax);
-    setLocalMin(newMin);
+  // Handle final changes (when slider is released)
+  const handleRangeChange = () => {
+    onPriceChange(localMin, localMax);
   };
 
-  const handleLocalMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    // Ensure max doesn't fall below min
-    const newMax = Math.max(value, localMin);
-    setLocalMax(newMax);
+  // Handle local changes (while slider is being dragged)
+  const handleMinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(event.target.value);
+    setLocalMin(Math.min(value, localMax));
   };
 
-  // Handle final changes when slider is released
-  const handleMinChangeComplete = () => {
-    if (localMin !== min) {
-      setMin(localMin);
-      onPriceChange(localMin, max);
-    }
+  const handleMaxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(event.target.value);
+    setLocalMax(Math.max(value, localMin));
   };
 
-  const handleMaxChangeComplete = () => {
-    if (localMax !== max) {
-      setMax(localMax);
-      onPriceChange(min, localMax);
-    }
+  // Calculate the percentage for slider background
+  const getTrackBackground = () => {
+    const minPercent = ((localMin - minPrice) / (maxPrice - minPrice)) * 100;
+    const maxPercent = ((localMax - minPrice) / (maxPrice - minPrice)) * 100;
+    return `linear-gradient(to right, 
+      #0f172a ${minPercent}%, 
+      #c026d3 ${minPercent}%, 
+      #c026d3 ${maxPercent}%, 
+      #0f172a ${maxPercent}%)`;
   };
-
-  // Handle input field changes (these trigger immediate updates)
-  const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    // Ensure min doesn't exceed max
-    const newMin = Math.min(value, max);
-    setLocalMin(newMin);
-    setMin(newMin);
-    onPriceChange(newMin, max);
-  };
-
-  const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    // Ensure max doesn't fall below min
-    const newMax = Math.max(value, min);
-    setLocalMax(newMax);
-    setMax(newMax);
-    onPriceChange(min, newMax);
-  };
-
-  // Calculate percentage for the slider fill
-  const minPercent = ((localMin - minPrice) / (maxPrice - minPrice)) * 100;
-  const maxPercent = ((localMax - minPrice) / (maxPrice - minPrice)) * 100;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 border border-gray-200 dark:border-gray-700">
-      <h3 className="text-lg font-medium mb-4 dark:text-white">Price Range</h3>
-
-      {/* Price values display */}
-      <div className="flex justify-between mb-2">
-        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-          {localMin.toFixed(2)} ETH
-        </span>
-        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-          {localMax.toFixed(2)} ETH
-        </span>
+    <div>
+      <div className="flex justify-between items-center mb-8">
+        <h3 className="text-2xl font-bold text-white">Price Range</h3>
+        <div className="text-lg font-medium px-4 py-2 rounded-full bg-purple-600 text-white">
+          {localMin} - {localMax} ETH
+        </div>
       </div>
 
-      {/* Slider track */}
-      <div className="relative h-2 mb-6">
-        {/* Track background */}
-        <div className="absolute w-full h-full bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-
-        {/* Selected range fill */}
+      <div className="pt-8 pb-12 px-2 relative">
+        {/* Slider track with gradient background */}
         <div
-          className="absolute h-full bg-blue-500 rounded-full"
+          className="absolute h-2 left-0 right-0 rounded-full"
           style={{
-            left: `${minPercent}%`,
-            width: `${maxPercent - minPercent}%`,
+            background: getTrackBackground(),
+            top: "24px",
+            zIndex: 1,
           }}
         ></div>
 
-        {/* Min thumb */}
-        <input
-          type="range"
-          className="absolute w-full h-full appearance-none bg-transparent pointer-events-auto cursor-pointer opacity-0"
-          min={minPrice}
-          max={maxPrice}
-          step={0.01}
-          value={localMin}
-          onChange={handleLocalMinChange}
-          onMouseUp={handleMinChangeComplete}
-          onTouchEnd={handleMinChangeComplete}
-        />
-
-        {/* Max thumb */}
-        <input
-          type="range"
-          className="absolute w-full h-full appearance-none bg-transparent pointer-events-auto cursor-pointer opacity-0"
-          min={minPrice}
-          max={maxPrice}
-          step={0.01}
-          value={localMax}
-          onChange={handleLocalMaxChange}
-          onMouseUp={handleMaxChangeComplete}
-          onTouchEnd={handleMaxChangeComplete}
-        />
-
-        {/* Visible thumbs */}
-        <div
-          className="absolute w-4 h-4 bg-white dark:bg-blue-600 border border-blue-500 rounded-full shadow -translate-x-1/2 -top-1"
-          style={{ left: `${minPercent}%` }}
-        ></div>
-        <div
-          className="absolute w-4 h-4 bg-white dark:bg-blue-600 border border-blue-500 rounded-full shadow -translate-x-1/2 -top-1"
-          style={{ left: `${maxPercent}%` }}
-        ></div>
-      </div>
-
-      {/* Min-max input fields */}
-      <div className="flex space-x-4">
-        <div className="w-1/2">
-          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
-            Min
-          </label>
+        {/* Price range inputs */}
+        <div className="relative">
           <input
-            type="number"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
+            type="range"
             min={minPrice}
-            max={max}
-            step={0.01}
+            max={maxPrice}
             value={localMin}
-            onChange={handleMinInputChange}
+            onChange={handleMinChange}
+            onMouseUp={handleRangeChange}
+            onTouchEnd={handleRangeChange}
+            className="absolute w-full h-2 appearance-none bg-transparent pointer-events-none z-10"
+            style={{
+              WebkitAppearance: "none",
+              top: "0px",
+            }}
+          />
+
+          <input
+            type="range"
+            min={minPrice}
+            max={maxPrice}
+            value={localMax}
+            onChange={handleMaxChange}
+            onMouseUp={handleRangeChange}
+            onTouchEnd={handleRangeChange}
+            className="absolute w-full h-2 appearance-none bg-transparent pointer-events-none z-10"
+            style={{
+              WebkitAppearance: "none",
+              top: "0px",
+            }}
           />
         </div>
-        <div className="w-1/2">
-          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
-            Max
-          </label>
-          <input
-            type="number"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-            min={min}
-            max={maxPrice}
-            step={0.01}
-            value={localMax}
-            onChange={handleMaxInputChange}
-          />
+
+        {/* Min/Max labels - moved below the slider */}
+        <div className="flex justify-between text-xl text-gray-300 absolute left-0 right-0 top-12">
+          <span>{minPrice} ETH</span>
+          <span>{maxPrice} ETH</span>
         </div>
       </div>
+
+      <button
+        onClick={() => onPriceChange(minPrice, maxPrice)}
+        className="w-full px-4 py-4 bg-purple-600 hover:bg-purple-700 text-white text-xl font-medium rounded-xl transition-colors"
+      >
+        Reset Filters
+      </button>
+
+      <style jsx>{`
+        /* Custom styling for range inputs */
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: white;
+          border: 3px solid #c026d3;
+          cursor: pointer;
+          pointer-events: auto;
+          box-shadow: 0 0 15px rgba(192, 38, 211, 0.8);
+          z-index: 20;
+          position: relative;
+          margin-top: -15px; /* Center the thumb on the track */
+        }
+
+        input[type="range"]::-moz-range-thumb {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: white;
+          border: 3px solid #c026d3;
+          cursor: pointer;
+          pointer-events: auto;
+          box-shadow: 0 0 15px rgba(192, 38, 211, 0.8);
+          z-index: 20;
+          position: relative;
+        }
+
+        /* Hide default track */
+        input[type="range"]::-webkit-slider-runnable-track {
+          background: transparent;
+          height: 2px;
+        }
+
+        input[type="range"]::-moz-range-track {
+          background: transparent;
+          height: 2px;
+        }
+      `}</style>
     </div>
   );
 };
