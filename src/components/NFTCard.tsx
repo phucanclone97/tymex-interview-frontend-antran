@@ -25,7 +25,6 @@ const NFTCard: React.FC<NFTCardProps> = ({ product }) => {
     const services = [
       `https://picsum.photos/seed/${product.id}/400/400`, // Lorem Picsum
       `https://source.unsplash.com/random/400x400?nft,digital,art&sig=${product.id}`, // Unsplash
-      `https://placeimg.com/400/400/tech?${product.id}`, // PlaceIMG
     ];
 
     // Use category to determine which service to use (ensuring consistent selection)
