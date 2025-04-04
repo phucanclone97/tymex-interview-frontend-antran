@@ -1,7 +1,7 @@
 import { IProduct } from "@/types/nft";
 
-// Get API URL from environment variables with fallback
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5005";
+// Get API URL from environment variables with fallback to relative path for Vercel
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 // Get auto refresh interval from environment variables with fallback
 export const AUTO_REFRESH_INTERVAL = parseInt(
