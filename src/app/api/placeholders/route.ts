@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const imageUrl = `https://via.placeholder.com/${size}x${size}/${bgColor}/FFFFFF?text=NFT+${id}`;
+  const imageUrl = `https://via.placeholder.com/${size}x${size}/${bgColor}/FFFFFF?text=NFT+${id}`; // Fetch random image from placeholder
 
   // Store in cache
   urlCache.set(cacheKey, imageUrl);
