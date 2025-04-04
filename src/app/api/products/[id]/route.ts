@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProductById } from "@/utils/mockData";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+interface RouteParams {
+  params: {
+    id: string;
+  };
+}
+
+export async function GET(request: NextRequest, { params }: RouteParams) {
   const id = parseInt(params.id);
 
   // Find the product with the matching ID

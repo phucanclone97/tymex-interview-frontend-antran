@@ -6,8 +6,18 @@ This project includes a mock server implementation that has been integrated into
 
 ## How It Works
 
-1. The mock data from `mockServer/db.json` is loaded by the built-in API routes.
-2. The API endpoints are:
+1. In development, there are two options:
+
+   - Use the local JSON server at `http://localhost:5005` (requires running the mock server)
+   - Use the built-in Next.js API routes at `/api` (recommended)
+
+2. For Vercel deployment:
+
+   - The static product data is bundled with the application
+   - API routes are deployed as serverless functions
+   - No external services or databases are required
+
+3. The API endpoints are:
    - `/api/products` - List, filter, sort, and paginate products
    - `/api/products/[id]` - Get a single product by ID
 
@@ -32,19 +42,23 @@ All the features from the original JSON Server are available through the Next.js
 
 ## Deployment Process
 
-When deploying to Vercel:
+1. Push your code to a GitHub repository
+2. Connect the repository to Vercel
+3. Deploy without any additional configuration
 
-1. Make sure the `mockServer` directory is included in your Git repository
-2. Vercel will automatically use the API routes defined in `src/app/api`
-3. Your frontend code should use relative API URLs starting with `/api`
+Vercel will automatically:
 
-## Local Development
+- Build your Next.js application
+- Deploy the API routes as serverless functions
+- Make the static assets available
 
-For local development, you can:
+## Data Strategy
 
-1. Continue using the original mock server with `node mockServer/server.js`
-2. Set `NEXT_PUBLIC_API_URL=http://localhost:5005` in your `.env.local` file
-3. Or use the built-in API routes by default with a relative `/api` URL
+For Vercel deployment, the application uses:
+
+1. A static JSON file (`src/mockData/products.json`) included in the build
+2. API routes that serve and filter this data
+3. A fallback mechanism that works in both development and production
 
 ## Environment Variables
 
