@@ -27,22 +27,8 @@ const categories: Category[] = [
 ];
 
 // Filter options
-const tierOptions = [
-  "All Tiers",
-  "Legendary",
-  "Mythic",
-  "Epic",
-  "Rare",
-  "Common",
-];
-const themeOptions = [
-  "All Themes",
-  "Fantasy",
-  "Sci-Fi",
-  "Cyberpunk",
-  "Medieval",
-  "Modern",
-];
+const tierOptions = ["All Tiers", "Premium", "Deluxe", "Basic"];
+const themeOptions = ["All Themes", "Halloween", "Colorful", "Light", "Dark"];
 const timeOptions = [
   "All Time",
   "Last 24h",
@@ -70,14 +56,16 @@ export default function Home() {
     setSearchQuery,
     selectedCategory,
     setSelectedCategory,
+    selectedTier,
+    setSelectedTier,
+    selectedTheme,
+    setSelectedTheme,
     priceRange,
     setPriceRange,
     minMaxPrice,
   } = useProducts(12);
 
   // Additional filter states
-  const [selectedTier, setSelectedTier] = useState("All Tiers");
-  const [selectedTheme, setSelectedTheme] = useState("All Themes");
   const [selectedTime, setSelectedTime] = useState("All Time");
   const [selectedSort, setSelectedSort] = useState("Default");
 

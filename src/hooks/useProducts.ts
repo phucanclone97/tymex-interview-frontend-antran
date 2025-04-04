@@ -18,6 +18,10 @@ interface UseProductsResult {
   setSearchQuery: (query: string) => void;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
+  selectedTier: string;
+  setSelectedTier: (tier: string) => void;
+  selectedTheme: string;
+  setSelectedTheme: (theme: string) => void;
   priceRange: [number, number];
   setPriceRange: (range: [number, number]) => void;
   minMaxPrice: [number, number];
@@ -30,6 +34,8 @@ export function useProducts(initialLimit = 6): UseProductsResult {
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedTier, setSelectedTier] = useState("All Tiers");
+  const [selectedTheme, setSelectedTheme] = useState("All Themes");
   const [limit] = useState(initialLimit);
   const [minMaxPrice, setMinMaxPrice] = useState<[number, number]>([0, 1000]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
@@ -46,7 +52,13 @@ export function useProducts(initialLimit = 6): UseProductsResult {
   useEffect(() => {
     filtersChangedRef.current = true;
     currentPageRef.current = 1;
-  }, [debouncedSearchQuery, selectedCategory, debouncedPriceRange]);
+  }, [
+    debouncedSearchQuery,
+    selectedCategory,
+    selectedTier,
+    selectedTheme,
+    debouncedPriceRange,
+  ]);
 
   // Main data fetching function
   const fetchDataImpl = useCallback(
@@ -80,6 +92,14 @@ export function useProducts(initialLimit = 6): UseProductsResult {
           params.category = selectedCategory;
         }
 
+        if (selectedTier && selectedTier !== "All Tiers") {
+          params.tier = selectedTier;
+        }
+
+        if (selectedTheme && selectedTheme !== "All Themes") {
+          params.theme = selectedTheme;
+        }
+
         console.log(`Fetching page ${pageToFetch}, isLoadMore: ${isLoadMore}`);
         const { data, total } = await fetchProducts(params);
         console.log(`Received ${data.length} items, total: ${total}`);
@@ -110,7 +130,14 @@ export function useProducts(initialLimit = 6): UseProductsResult {
         isLoadingRef.current = false;
       }
     },
-    [debouncedSearchQuery, debouncedPriceRange, limit, selectedCategory]
+    [
+      debouncedSearchQuery,
+      debouncedPriceRange,
+      limit,
+      selectedCategory,
+      selectedTier,
+      selectedTheme,
+    ]
   );
 
   // Load more function - only triggers if not loading and there's more data
@@ -126,7 +153,13 @@ export function useProducts(initialLimit = 6): UseProductsResult {
     if (filtersChangedRef.current) {
       fetchDataImpl(false);
     }
-  }, [debouncedSearchQuery, selectedCategory, debouncedPriceRange]);
+  }, [
+    debouncedSearchQuery,
+    selectedCategory,
+    selectedTier,
+    selectedTheme,
+    debouncedPriceRange,
+  ]);
 
   // Initial data load
   useEffect(() => {
@@ -200,6 +233,10 @@ export function useProducts(initialLimit = 6): UseProductsResult {
     setSearchQuery,
     selectedCategory,
     setSelectedCategory,
+    selectedTier,
+    setSelectedTier,
+    selectedTheme,
+    setSelectedTheme,
     priceRange,
     setPriceRange,
     minMaxPrice,

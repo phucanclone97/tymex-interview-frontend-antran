@@ -12,6 +12,8 @@ export const AUTO_REFRESH_INTERVAL = parseInt(
 export interface SearchParams {
   q?: string;
   category?: string;
+  tier?: string;
+  theme?: string;
   minPrice?: number;
   maxPrice?: number;
   _page?: number;
