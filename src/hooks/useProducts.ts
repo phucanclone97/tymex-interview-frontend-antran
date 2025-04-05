@@ -8,6 +8,15 @@ import {
 } from "@/utils/api";
 import { useDebounce } from "./useDebounce";
 
+// Define a filter state interface to consolidate all filters
+interface FilterState {
+  searchQuery: string;
+  category: string;
+  tier: string;
+  theme: string;
+  priceRange: [number, number];
+}
+
 interface UseProductsResult {
   products: IProduct[];
   loading: boolean;
@@ -41,32 +50,65 @@ export function useProducts(initialLimit = 6): UseProductsResult {
     pages: 1,
     hasMore: false,
   });
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedTier, setSelectedTier] = useState("All Tiers");
-  const [selectedTheme, setSelectedTheme] = useState("All Themes");
+
+  // Single filter state for all filter values
+  const [filters, setFilters] = useState<FilterState>({
+    searchQuery: "",
+    category: "",
+    tier: "All Tiers",
+    theme: "All Themes",
+    priceRange: [0, 1000],
+  });
+
   const [limit] = useState(initialLimit);
   const [minMaxPrice, setMinMaxPrice] = useState<[number, number]>([0, 1000]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   // Use refs to manage state without triggering re-renders
   const currentPageRef = useRef(1);
   const isLoadingRef = useRef(false);
   const filtersChangedRef = useRef(false);
 
-  const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  const debouncedPriceRange = useDebounce(priceRange, 500);
+  // Debounce only the values that need debouncing
+  const debouncedSearchQuery = useDebounce(filters.searchQuery, 500);
+  const debouncedPriceRange = useDebounce(filters.priceRange, 500);
 
-  // Track when filters change
+  // Filter updater functions
+  const setSearchQuery = useCallback((query: string) => {
+    setFilters((prev) => ({ ...prev, searchQuery: query }));
+  }, []);
+
+  const setSelectedCategory = useCallback((category: string) => {
+    setFilters((prev) => ({ ...prev, category }));
+  }, []);
+
+  const setSelectedTier = useCallback((tier: string) => {
+    setFilters((prev) => ({ ...prev, tier }));
+  }, []);
+
+  const setSelectedTheme = useCallback((theme: string) => {
+    setFilters((prev) => ({ ...prev, theme }));
+  }, []);
+
+  const setPriceRange = useCallback((priceRange: [number, number]) => {
+    setFilters((prev) => ({ ...prev, priceRange }));
+  }, []);
+
+  // Track when filters change - but only after initial load
   useEffect(() => {
-    filtersChangedRef.current = true;
-    currentPageRef.current = 1;
+    if (initialLoadComplete && !isInitializing) {
+      filtersChangedRef.current = true;
+      currentPageRef.current = 1;
+    }
   }, [
     debouncedSearchQuery,
-    selectedCategory,
-    selectedTier,
-    selectedTheme,
+    filters.category,
+    filters.tier,
+    filters.theme,
     debouncedPriceRange,
+    initialLoadComplete,
+    isInitializing,
   ]);
 
   // Main data fetching function
@@ -92,21 +134,20 @@ export function useProducts(initialLimit = 6): UseProductsResult {
           maxPrice: debouncedPriceRange[1],
         };
 
-        console.log(isLoadMore, params);
         if (debouncedSearchQuery) {
           params.q = debouncedSearchQuery;
         }
 
-        if (selectedCategory && selectedCategory !== "all") {
-          params.category = selectedCategory;
+        if (filters.category && filters.category !== "all") {
+          params.category = filters.category;
         }
 
-        if (selectedTier && selectedTier !== "All Tiers") {
-          params.tier = selectedTier;
+        if (filters.tier && filters.tier !== "All Tiers") {
+          params.tier = filters.tier;
         }
 
-        if (selectedTheme && selectedTheme !== "All Themes") {
-          params.theme = selectedTheme;
+        if (filters.theme && filters.theme !== "All Themes") {
+          params.theme = filters.theme;
         }
 
         console.log(`Fetching page ${pageToFetch}, isLoadMore: ${isLoadMore}`);
@@ -160,9 +201,9 @@ export function useProducts(initialLimit = 6): UseProductsResult {
       debouncedSearchQuery,
       debouncedPriceRange,
       limit,
-      selectedCategory,
-      selectedTier,
-      selectedTheme,
+      filters.category,
+      filters.tier,
+      filters.theme,
     ]
   );
 
@@ -171,40 +212,42 @@ export function useProducts(initialLimit = 6): UseProductsResult {
     if (!isLoadingRef.current && pagination.hasMore) {
       fetchDataImpl(true);
     }
-  }, [pagination.hasMore]);
+  }, [fetchDataImpl, pagination.hasMore]);
 
   // Fetch initial data and handle filter changes
   useEffect(() => {
-    // Only fetch when filters have changed
-    if (filtersChangedRef.current) {
+    // Only fetch when filters have changed and after initial load
+    if (filtersChangedRef.current && initialLoadComplete && !isInitializing) {
       fetchDataImpl(false);
     }
   }, [
     debouncedSearchQuery,
-    selectedCategory,
-    selectedTier,
-    selectedTheme,
+    filters.category,
+    filters.tier,
+    filters.theme,
     debouncedPriceRange,
+    fetchDataImpl,
+    initialLoadComplete,
+    isInitializing,
   ]);
 
-  // Initial data load
+  // Initialize price range and do initial data load together
   useEffect(() => {
-    fetchDataImpl(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Fetch the min and max prices if not set yet
-  useEffect(() => {
-    const fetchPriceRange = async () => {
+    const initialize = async () => {
       try {
-        const { data } = await fetchProducts({
+        setLoading(true);
+        setIsInitializing(true);
+
+        // First, get the min price
+        const { data: minData } = await fetchProducts({
           _limit: 1,
           _sort: "price",
           _order: "asc",
         });
 
-        const minPrice = data.length > 0 ? data[0].price : 0;
+        const minPrice = minData.length > 0 ? minData[0].price : 0;
 
+        // Then get the max price
         const { data: maxData } = await fetchProducts({
           _limit: 1,
           _sort: "price",
@@ -216,14 +259,61 @@ export function useProducts(initialLimit = 6): UseProductsResult {
         // Add a bit of padding to max price
         const paddedMaxPrice = Math.ceil(maxPrice * 1.1);
 
+        // Update state with price range values
         setMinMaxPrice([minPrice, paddedMaxPrice]);
-        setPriceRange([minPrice, paddedMaxPrice]);
+
+        // Important: Update filters directly without triggering separate filter changes
+        setFilters((prev) => ({
+          ...prev,
+          priceRange: [minPrice, paddedMaxPrice],
+        }));
+
+        // Fetch initial products with correct price range - we'll do this manually
+        // instead of relying on the hook to prevent duplicate fetches
+        const params: SearchParams = {
+          _page: 1,
+          _limit: limit,
+          _sort: "createdAt",
+          _order: "desc",
+          minPrice: minPrice,
+          maxPrice: paddedMaxPrice,
+        };
+
+        if (filters.category && filters.category !== "all") {
+          params.category = filters.category;
+        }
+
+        console.log("Fetching initial data with price range");
+        const {
+          data,
+          total,
+          pagination: paginationData,
+        } = await fetchProducts(params);
+        console.log(`Initial fetch: ${data.length} items, total: ${total}`);
+
+        // Update all the relevant states
+        setTotalCount(total);
+        setPagination(paginationData);
+        setProducts(data);
+
+        // Mark initial load as complete to enable filter change detection
+        setInitialLoadComplete(true);
       } catch (err) {
-        console.error("Error fetching price range:", err);
+        console.error("Error during initialization:", err);
+        setError(
+          err instanceof Error ? err : new Error("An unknown error occurred")
+        );
+      } finally {
+        setLoading(false);
+        setIsInitializing(false);
       }
     };
 
-    fetchPriceRange();
+    // Run initialization once
+    initialize();
+
+    // This effect should only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Auto refresh every 60 seconds - only when the component is mounted and not during development
@@ -246,7 +336,7 @@ export function useProducts(initialLimit = 6): UseProductsResult {
         clearInterval(intervalId);
       }
     };
-  }, []);
+  }, [fetchDataImpl]);
 
   return {
     products,
@@ -255,15 +345,15 @@ export function useProducts(initialLimit = 6): UseProductsResult {
     totalCount,
     hasMore: pagination.hasMore,
     loadMore,
-    searchQuery,
+    searchQuery: filters.searchQuery,
     setSearchQuery,
-    selectedCategory,
+    selectedCategory: filters.category,
     setSelectedCategory,
-    selectedTier,
+    selectedTier: filters.tier,
     setSelectedTier,
-    selectedTheme,
+    selectedTheme: filters.theme,
     setSelectedTheme,
-    priceRange,
+    priceRange: filters.priceRange,
     setPriceRange,
     minMaxPrice,
     pagination,

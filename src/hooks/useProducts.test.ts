@@ -37,7 +37,33 @@ describe("useProducts hook", () => {
   jest.setTimeout(30000);
 
   it("should initialize with default values", async () => {
-    // Mock initial fetch response
+    // First mock for min price fetch
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [{ id: 1, price: 10, title: "Product 1" }],
+      total: 1,
+      pagination: {
+        total: 1,
+        page: 1,
+        limit: 1,
+        pages: 1,
+        hasMore: false,
+      },
+    });
+
+    // Second mock for max price fetch
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [{ id: 2, price: 100, title: "Product 2" }],
+      total: 1,
+      pagination: {
+        total: 1,
+        page: 1,
+        limit: 1,
+        pages: 1,
+        hasMore: false,
+      },
+    });
+
+    // Third mock for initial data fetch
     (fetchProducts as jest.Mock).mockResolvedValueOnce({
       data: [{ id: 1, title: "Product 1" }],
       total: 1,
@@ -70,9 +96,38 @@ describe("useProducts hook", () => {
   });
 
   it("should handle loading more products", async () => {
-    // Initial data load
-    (fetchProducts as jest.Mock).mockImplementation((params) => {
-      // Return different data based on page parameter
+    // Min price mock
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [{ id: 1, price: 10, title: "Product 1" }],
+      total: 1,
+      pagination: { total: 1, page: 1, limit: 1, pages: 1, hasMore: false },
+    });
+
+    // Max price mock
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [{ id: 4, price: 100, title: "Product 4" }],
+      total: 1,
+      pagination: { total: 1, page: 1, limit: 1, pages: 1, hasMore: false },
+    });
+
+    // Initial data load mock
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [
+        { id: 1, title: "Product 1" },
+        { id: 2, title: "Product 2" },
+      ],
+      total: 4,
+      pagination: {
+        total: 4,
+        page: 1,
+        limit: 2,
+        pages: 2,
+        hasMore: true,
+      },
+    });
+
+    // Mock for load more
+    (fetchProducts as jest.Mock).mockImplementationOnce((params) => {
       if (params && params._page === 2) {
         return Promise.resolve({
           data: [
@@ -89,21 +144,6 @@ describe("useProducts hook", () => {
           },
         });
       }
-
-      return Promise.resolve({
-        data: [
-          { id: 1, title: "Product 1" },
-          { id: 2, title: "Product 2" },
-        ],
-        total: 4,
-        pagination: {
-          total: 4,
-          page: 1,
-          limit: 2,
-          pages: 2,
-          hasMore: true,
-        },
-      });
     });
 
     const { result } = renderHook(() => useProducts(2)); // Limit of 2 per page
@@ -145,8 +185,38 @@ describe("useProducts hook", () => {
   });
 
   it("should filter out duplicate products when loading more", async () => {
-    // Setup mock implementation with page-dependent responses
-    (fetchProducts as jest.Mock).mockImplementation((params) => {
+    // Min price mock
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [{ id: 1, price: 10, title: "Product 1" }],
+      total: 1,
+      pagination: { total: 1, page: 1, limit: 1, pages: 1, hasMore: false },
+    });
+
+    // Max price mock
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [{ id: 4, price: 100, title: "Product 4" }],
+      total: 1,
+      pagination: { total: 1, page: 1, limit: 1, pages: 1, hasMore: false },
+    });
+
+    // Initial data load
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [
+        { id: 1, title: "Product 1" },
+        { id: 2, title: "Product 2" },
+      ],
+      total: 4,
+      pagination: {
+        total: 4,
+        page: 1,
+        limit: 2,
+        pages: 2,
+        hasMore: true,
+      },
+    });
+
+    // Load more mock
+    (fetchProducts as jest.Mock).mockImplementationOnce((params) => {
       if (params && params._page === 2) {
         return Promise.resolve({
           data: [
@@ -163,21 +233,6 @@ describe("useProducts hook", () => {
           },
         });
       }
-
-      return Promise.resolve({
-        data: [
-          { id: 1, title: "Product 1" },
-          { id: 2, title: "Product 2" },
-        ],
-        total: 4,
-        pagination: {
-          total: 4,
-          page: 1,
-          limit: 2,
-          pages: 2,
-          hasMore: true,
-        },
-      });
     });
 
     const { result } = renderHook(() => useProducts(2));
@@ -220,7 +275,27 @@ describe("useProducts hook", () => {
   it("should update search and filter criteria", async () => {
     let fetchCount = 0;
 
-    // Mock implementation to track calls
+    // Min price mock
+    (fetchProducts as jest.Mock).mockImplementationOnce(() => {
+      fetchCount++;
+      return Promise.resolve({
+        data: [{ id: 1, price: 10, title: "Test Product" }],
+        total: 1,
+        pagination: { total: 1, page: 1, limit: 1, pages: 1, hasMore: false },
+      });
+    });
+
+    // Max price mock
+    (fetchProducts as jest.Mock).mockImplementationOnce(() => {
+      fetchCount++;
+      return Promise.resolve({
+        data: [{ id: 2, price: 100, title: "Test Product" }],
+        total: 1,
+        pagination: { total: 1, page: 1, limit: 1, pages: 1, hasMore: false },
+      });
+    });
+
+    // Initial data load and subsequent filter changes
     (fetchProducts as jest.Mock).mockImplementation(() => {
       fetchCount++;
       return Promise.resolve({
@@ -248,38 +323,62 @@ describe("useProducts hook", () => {
       expect(result.current.loading).toBe(false);
     });
 
-    // First fetch is done - fetchCount should be at least 1
-
-    // Update search query and trigger debounce
+    // Change search query - this should mark filters as changed
     await act(async () => {
       result.current.setSearchQuery("test");
-      // Advance timers to trigger the debounced search
-      jest.advanceTimersByTime(510); // Slightly more than debounce time
+      // Wait for debounced query to trigger
+      jest.advanceTimersByTime(600);
     });
 
-    // Wait for the search fetch to complete
+    // Wait for search results to load
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
     });
 
-    // Update category (should trigger fetch immediately)
+    // Change category - this should mark filters as changed
     await act(async () => {
       result.current.setSelectedCategory("Epic");
       jest.advanceTimersByTime(10);
     });
 
-    // Wait for the category fetch to complete
+    // Wait for filtered results to load
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    // Change price range - this should mark filters as changed
+    await act(async () => {
+      result.current.setPriceRange([20, 50]);
+      // Wait for debounced price to trigger
+      jest.advanceTimersByTime(600);
+    });
+
+    // Wait for price filtered results to load
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
     });
 
     // Verify that filterChangedRef triggered correct number of fetches
-    // The hook's behavior appears to cause 5 API calls in the test environment
-    expect(fetchCount).toBe(5);
+    // 3 initial fetches (min price, max price, initial data) + 3 filter changes = 6 total
+    expect(fetchCount).toBe(6);
   });
 
   it("should handle API errors", async () => {
-    // Mock a failed API call
+    // Min price mock
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [{ id: 1, price: 10, title: "Product 1" }],
+      total: 1,
+      pagination: { total: 1, page: 1, limit: 1, pages: 1, hasMore: false },
+    });
+
+    // Max price mock
+    (fetchProducts as jest.Mock).mockResolvedValueOnce({
+      data: [{ id: 2, price: 100, title: "Product 2" }],
+      total: 1,
+      pagination: { total: 1, page: 1, limit: 1, pages: 1, hasMore: false },
+    });
+
+    // Throw error on data fetch
     (fetchProducts as jest.Mock).mockRejectedValueOnce(new Error("API error"));
 
     const { result } = renderHook(() => useProducts());
@@ -289,13 +388,14 @@ describe("useProducts hook", () => {
       jest.advanceTimersByTime(10);
     });
 
-    // Wait for the error state
+    // Wait for the error state to be set
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
       expect(result.current.error).not.toBeNull();
     });
 
-    expect(result.current.error?.message).toBe("API error");
+    // Verify error state
+    expect(result.current.error!.message).toBe("API error");
     expect(result.current.products).toHaveLength(0);
   });
 });
