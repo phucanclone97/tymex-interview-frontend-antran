@@ -16,11 +16,10 @@ describe("API Service", () => {
         headers: {
           get: jest.fn((key: string) => {
             const headers: Record<string, string> = {
-              "X-Total-Count": "2",
-              "X-Pagination-Page": "1",
-              "X-Pagination-Limit": "12",
-              "X-Pagination-Pages": "1",
-              "X-Pagination-Has-More": "false",
+              "x-total-count": "2",
+              "x-pagination-page": "1",
+              "x-pagination-limit": "12",
+              "x-pagination-pages": "1",
             };
             return headers[key] || null;
           }),
@@ -60,11 +59,10 @@ describe("API Service", () => {
         headers: {
           get: jest.fn((key: string) => {
             const headers: Record<string, string> = {
-              "X-Total-Count": "1",
-              "X-Pagination-Page": "2",
-              "X-Pagination-Limit": "10",
-              "X-Pagination-Pages": "1",
-              "X-Pagination-Has-More": "false",
+              "x-total-count": "1",
+              "x-pagination-page": "2",
+              "x-pagination-limit": "10",
+              "x-pagination-pages": "1",
             };
             return headers[key] || null;
           }),
@@ -80,12 +78,14 @@ describe("API Service", () => {
         _limit: 10,
         _sort: "price",
         _order: "asc",
+        minPrice: 10,
+        maxPrice: 100,
       };
 
       const result = await fetchProducts(params);
 
       expect(fetch).toHaveBeenCalledWith(
-        "/api/products?q=test&category=Epic&_page=2&_limit=10&_sort=price&_order=asc",
+        "/api/products?q=test&category=Epic&_page=2&_limit=10&_sort=price&_order=asc&price_gte=10&price_lte=100",
         {
           method: "GET",
           headers: {
