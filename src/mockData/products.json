@@ -454,5 +454,461 @@
       "avatar": "https://robohash.org/nihiloditnisi.png?size=100x100&set=set1",
       "onlineStatus": "offline"
     }
+  },
+  {
+    "id": 25,
+    "title": "Cosmic Guardian V2",
+    "category": "Mythic",
+    "price": 45.29,
+    "isFavorite": false,
+    "createdAt": 1714533946000,
+    "theme": "Dark",
+    "tier": "Premium",
+    "imageId": 3,
+    "author": {
+      "firstName": "Dewie",
+      "lastName": "Labeuil",
+      "email": "dlabeuilv@nba.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/nihiltotamdolorem.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 26,
+    "title": "Groove Master Pro",
+    "category": "Epic",
+    "price": 63.77,
+    "isFavorite": true,
+    "createdAt": 1652687980000,
+    "theme": "Colorful",
+    "tier": "Deluxe",
+    "imageId": 12,
+    "author": {
+      "firstName": "Thaddeus",
+      "lastName": "Tumulty",
+      "email": "ttumultyt@t-online.de",
+      "gender": "Male",
+      "avatar": "https://robohash.org/perferendisitaquedolor.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 27,
+    "title": "DJ Phantom Gold Edition",
+    "category": "Accessory",
+    "price": 82.39,
+    "isFavorite": true,
+    "createdAt": 1695115094000,
+    "theme": "Halloween",
+    "tier": "Deluxe",
+    "imageId": 15,
+    "author": {
+      "firstName": "Alexis",
+      "lastName": "Blandamore",
+      "email": "ablandamore13@blog.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/expeditanostrumcommodi.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 28,
+    "title": "Cyber Ronin",
+    "category": "Shoes",
+    "price": 45.22,
+    "isFavorite": false,
+    "createdAt": 1713615484000,
+    "theme": "Light",
+    "tier": "Premium",
+    "imageId": 5,
+    "author": {
+      "firstName": "Dennis",
+      "lastName": "Rosenshine",
+      "email": "drosenshinem@google.ca",
+      "gender": "Male",
+      "avatar": "https://robohash.org/etaccusantiumminus.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 29,
+    "title": "Cyber Shogun",
+    "category": "Epic",
+    "price": 137.56,
+    "isFavorite": true,
+    "createdAt": 1600481938000,
+    "theme": "Dark",
+    "tier": "Premium",
+    "imageId": 18,
+    "author": {
+      "firstName": "Burch",
+      "lastName": "Stapleford",
+      "email": "bstaplefordo@mozilla.org",
+      "gender": "Male",
+      "avatar": "https://robohash.org/eaquisoluta.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 30,
+    "title": "Bassbreaker Elite",
+    "category": "Lower Body",
+    "price": 171.34,
+    "isFavorite": false,
+    "createdAt": 1715002382000,
+    "theme": "Halloween",
+    "tier": "Deluxe",
+    "imageId": 7,
+    "author": {
+      "firstName": "Mead",
+      "lastName": "Niccols",
+      "email": "mniccols5@ameblo.jp",
+      "gender": "Male",
+      "avatar": "https://robohash.org/quoindolore.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 31,
+    "title": "The Code Ninja",
+    "category": "Upper Body",
+    "price": 75.32,
+    "isFavorite": true,
+    "createdAt": 1602953382000,
+    "theme": "Light",
+    "tier": "Premium",
+    "imageId": 4,
+    "author": {
+      "firstName": "Gradey",
+      "lastName": "Birds",
+      "email": "gbirds1c@sphinn.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/iustoquiadolorem.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 32,
+    "title": "Bass Maestro",
+    "category": "Epic",
+    "price": 195.79,
+    "isFavorite": false,
+    "createdAt": 1581193622000,
+    "theme": "Colorful",
+    "tier": "Deluxe",
+    "imageId": 9,
+    "author": {
+      "firstName": "Rockey",
+      "lastName": "Stoddart",
+      "email": "rstoddartn@bandcamp.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/verovoluptatemblanditiis.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 33,
+    "title": "Rhythm General",
+    "category": "Epic",
+    "price": 203.99,
+    "isFavorite": true,
+    "createdAt": 1589762208000,
+    "theme": "Dark",
+    "tier": "Deluxe",
+    "imageId": 16,
+    "author": {
+      "firstName": "Valdemar",
+      "lastName": "Gertray",
+      "email": "vgertrayj@comsenz.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/faciliseaqueeum.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 34,
+    "title": "The Digital Phantom",
+    "category": "Epic",
+    "price": 77.89,
+    "isFavorite": false,
+    "createdAt": 1622284811000,
+    "theme": "Light",
+    "tier": "Premium",
+    "imageId": 17,
+    "author": {
+      "firstName": "Leopold",
+      "lastName": "MacKnight",
+      "email": "lmacknight6@timesonline.co.uk",
+      "gender": "Male",
+      "avatar": "https://robohash.org/doloresvitaeadipisci.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 35,
+    "title": "Quantum Knight",
+    "category": "Mythic",
+    "price": 187.3,
+    "isFavorite": true,
+    "createdAt": 1712580623000,
+    "theme": "Colorful",
+    "tier": "Deluxe",
+    "imageId": 13,
+    "author": {
+      "firstName": "Jewell",
+      "lastName": "de Broke",
+      "email": "jdebroke1d@wired.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/ipsamdeseruntnobis.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 36,
+    "title": "Neon Rogue X",
+    "category": "Head",
+    "price": 79.55,
+    "isFavorite": true,
+    "createdAt": 1609459082000,
+    "theme": "Halloween",
+    "tier": "Basic",
+    "imageId": 12,
+    "author": {
+      "firstName": "Rockey",
+      "lastName": "Stoddart",
+      "email": "rstoddartn@bandcamp.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/verovoluptatemblanditiis.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 37,
+    "title": "Electric Shogun",
+    "category": "Mythic",
+    "price": 112.65,
+    "isFavorite": false,
+    "createdAt": 1682493946000,
+    "theme": "Dark",
+    "tier": "Premium",
+    "imageId": 14,
+    "author": {
+      "firstName": "Alexis",
+      "lastName": "Blandamore",
+      "email": "ablandamore13@blog.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/expeditanostrumcommodi.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 38,
+    "title": "Synthwave Knight",
+    "category": "Epic",
+    "price": 143.29,
+    "isFavorite": true,
+    "createdAt": 1700493946000,
+    "theme": "Light",
+    "tier": "Deluxe",
+    "imageId": 8,
+    "author": {
+      "firstName": "Dennis",
+      "lastName": "Rosenshine",
+      "email": "drosenshinem@google.ca",
+      "gender": "Male",
+      "avatar": "https://robohash.org/etaccusantiumminus.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 39,
+    "title": "Rhythm Guardian",
+    "category": "Lower Body",
+    "price": 58.89,
+    "isFavorite": false,
+    "createdAt": 1705002382000,
+    "theme": "Colorful",
+    "tier": "Basic",
+    "imageId": 3,
+    "author": {
+      "firstName": "Burch",
+      "lastName": "Stapleford",
+      "email": "bstaplefordo@mozilla.org",
+      "gender": "Male",
+      "avatar": "https://robohash.org/eaquisoluta.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 40,
+    "title": "Neon Operator",
+    "category": "Accessories",
+    "price": 94.24,
+    "isFavorite": true,
+    "createdAt": 1612953382000,
+    "theme": "Halloween",
+    "tier": "Premium",
+    "imageId": 10,
+    "author": {
+      "firstName": "Mead",
+      "lastName": "Niccols",
+      "email": "mniccols5@ameblo.jp",
+      "gender": "Male",
+      "avatar": "https://robohash.org/quoindolore.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 41,
+    "title": "Cyber Warlord",
+    "category": "Upper Body",
+    "price": 134.59,
+    "isFavorite": false,
+    "createdAt": 1591193622000,
+    "theme": "Dark",
+    "tier": "Deluxe",
+    "imageId": 11,
+    "author": {
+      "firstName": "Gradey",
+      "lastName": "Birds",
+      "email": "gbirds1c@sphinn.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/iustoquiadolorem.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 42,
+    "title": "Electric Samurai",
+    "category": "Epic",
+    "price": 176.39,
+    "isFavorite": true,
+    "createdAt": 1599762208000,
+    "theme": "Light",
+    "tier": "Premium",
+    "imageId": 5,
+    "author": {
+      "firstName": "Valdemar",
+      "lastName": "Gertray",
+      "email": "vgertrayj@comsenz.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/faciliseaqueeum.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 43,
+    "title": "Digital Phantom",
+    "category": "Mythic",
+    "price": 89.92,
+    "isFavorite": false,
+    "createdAt": 1632284811000,
+    "theme": "Dark",
+    "tier": "Basic",
+    "imageId": 6,
+    "author": {
+      "firstName": "Leopold",
+      "lastName": "MacKnight",
+      "email": "lmacknight6@timesonline.co.uk",
+      "gender": "Male",
+      "avatar": "https://robohash.org/doloresvitaeadipisci.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 44,
+    "title": "Quantum Stalker",
+    "category": "Epic",
+    "price": 152.72,
+    "isFavorite": true,
+    "createdAt": 1702580623000,
+    "theme": "Halloween",
+    "tier": "Deluxe",
+    "imageId": 7,
+    "author": {
+      "firstName": "Jewell",
+      "lastName": "de Broke",
+      "email": "jdebroke1d@wired.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/ipsamdeseruntnobis.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
+  },
+  {
+    "id": 45,
+    "title": "Neon Rogue Alpha",
+    "category": "Head",
+    "price": 67.88,
+    "isFavorite": false,
+    "createdAt": 1619459082000,
+    "theme": "Colorful",
+    "tier": "Premium",
+    "imageId": 9,
+    "author": {
+      "firstName": "Rockey",
+      "lastName": "Stoddart",
+      "email": "rstoddartn@bandcamp.com",
+      "gender": "Male",
+      "avatar": "https://robohash.org/verovoluptatemblanditiis.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 46,
+    "title": "Astral Warlord",
+    "category": "Mythic",
+    "price": 198.15,
+    "isFavorite": true,
+    "createdAt": 1692493946000,
+    "theme": "Dark",
+    "tier": "Deluxe",
+    "imageId": 1,
+    "author": {
+      "firstName": "Alexis",
+      "lastName": "Blandamore",
+      "email": "ablandamore13@blog.com",
+      "gender": "Female",
+      "avatar": "https://robohash.org/expeditanostrumcommodi.png?size=100x100&set=set1",
+      "onlineStatus": "online"
+    }
+  },
+  {
+    "id": 47,
+    "title": "Glow Hunter",
+    "category": "Upper Body",
+    "price": 85.49,
+    "isFavorite": false,
+    "createdAt": 1710493946000,
+    "theme": "Light",
+    "tier": "Basic",
+    "imageId": 2,
+    "author": {
+      "firstName": "Dennis",
+      "lastName": "Rosenshine",
+      "email": "drosenshinem@google.ca",
+      "gender": "Male",
+      "avatar": "https://robohash.org/etaccusantiumminus.png?size=100x100&set=set1",
+      "onlineStatus": "offline"
+    }
+  },
+  {
+    "id": 48,
+    "title": "Synthwave Guardian",
+    "category": "Lower Body",
+    "price": 67.23,
+    "isFavorite": true,
+    "createdAt": 1708002382000,
+    "theme": "Halloween",
+    "tier": "Premium",
+    "imageId": 3,
+    "author": {
+      "firstName": "Burch",
+      "lastName": "Stapleford",
+      "email": "bstaplefordo@mozilla.org",
+      "gender": "Male",
+      "avatar": "https://robohash.org/eaquisoluta.png?size=100x100&set=set1",
+      "onlineStatus": "idle"
+    }
   }
 ]
