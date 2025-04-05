@@ -75,14 +75,14 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         {/* Categories container */}
         <div
           ref={scrollContainerRef}
-          className="flex space-x-2 sm:space-x-3 pb-2 overflow-x-auto scrollbar-hide mx-12"
+          className="flex space-x-2 sm:space-x-2 md:space-x-3 pb-2 overflow-x-auto scrollbar-hide mx-12"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => onCategoryChange(category.id)}
-              className={`px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg whitespace-nowrap transition-colors ${
+              className={`px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm md:text-base rounded-lg whitespace-nowrap transition-colors ${
                 selectedCategory === category.id
                   ? "bg-purple-600 text-white"
                   : "bg-gray-800 text-gray-300 hover:bg-gray-700"

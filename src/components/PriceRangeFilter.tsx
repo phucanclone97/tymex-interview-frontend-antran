@@ -47,7 +47,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
 
   return (
     <div className="text-white">
-      <div className="relative mb-6 mt-8">
+      <div className="relative mb-4 mt-6">
         {/* Slider track */}
         <div className="w-full h-1 bg-gray-700 rounded-md"></div>
 
@@ -72,7 +72,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
           className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none"
           style={
             {
-              "--thumb-size": "1.25rem",
+              "--thumb-size": "1rem",
               "--thumb-color": "#9333ea",
             } as React.CSSProperties
           }
@@ -90,7 +90,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
           className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none"
           style={
             {
-              "--thumb-size": "1.25rem",
+              "--thumb-size": "1rem",
               "--thumb-color": "#9333ea",
             } as React.CSSProperties
           }
@@ -98,11 +98,11 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
       </div>
 
       <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-2 rounded-full bg-gray-800 px-3 py-1">
+        <div className="flex items-center space-x-1 rounded-full bg-gray-800 px-2 py-1 text-xs sm:text-sm">
           <span className="font-medium">{localMin.toFixed(2)}</span>
           <span>ETH</span>
         </div>
-        <div className="flex items-center space-x-2 rounded-full bg-gray-800 px-3 py-1">
+        <div className="flex items-center space-x-1 rounded-full bg-gray-800 px-2 py-1 text-xs sm:text-sm">
           <span className="font-medium">{localMax.toFixed(2)}</span>
           <span>ETH</span>
         </div>

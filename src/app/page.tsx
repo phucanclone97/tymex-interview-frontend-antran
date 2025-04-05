@@ -121,9 +121,9 @@ export default function Home() {
 
               <div className="space-y-6">
                 {/* Price Range Filter */}
-                <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-6 border border-gray-700">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-semibold text-white">
+                <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-md p-4 sm:p-5 md:p-6 border border-gray-700">
+                  <div className="flex justify-between items-center mb-2 sm:mb-3 md:mb-4">
+                    <h3 className="text-lg sm:text-xl font-semibold text-white">
                       Price Range
                     </h3>
                     {loading && !initialLoading && (
@@ -137,8 +137,6 @@ export default function Home() {
                     currentMax={priceRange[1]}
                     onPriceChange={(min, max) => setPriceRange([min, max])}
                   />
-
-                  {/* <div className="mt-4"></div> */}
                 </div>
 
                 {/* Tier Filter Dropdown */}
