@@ -32,7 +32,7 @@ A modern NFT marketplace built with Next.js, TypeScript, and Tailwind CSS.
 
 ```bash
 git clone <repository-url>
-cd nft-marketplace/tymex
+cd tymex-interview-frontend-antran
 ```
 
 2. Install dependencies
@@ -46,7 +46,7 @@ yarn install
 3. Start the mock server
 
 ```bash
-cd ../tymex-mock-server-nodejs-1_0
+cd ../mockServer
 npm install
 npm run start
 ```
@@ -57,6 +57,7 @@ npm run start
 cd ../tymex
 npm run dev
 # or
+
 yarn dev
 ```
 
