@@ -91,7 +91,7 @@ yarn test:coverage
 
 ## API Integration
 
-The application connects to a JSON-server mock API running on http://localhost:5005 that provides data for NFT products.
+The application using NextJS API running on http://localhost:3000/api that provides data for NFT products.
 
 ## Features Implemented
 
