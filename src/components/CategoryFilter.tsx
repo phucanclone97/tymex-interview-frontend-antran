@@ -49,12 +49,12 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
   return (
     <div className="relative w-full pb-1 -mx-2 px-2">
-      <div className="flex items-center">
+      <div className="flex items-center relative">
         {/* Left scroll button */}
         {showLeftButton && (
           <button
             onClick={scrollLeft}
-            className="absolute left-0 z-10 bg-gray-800 hover:bg-gray-700 text-white rounded-l-lg py-2 px-2 h-10 flex items-center justify-center shadow-md"
+            className="absolute left-2 z-10 bg-gray-800 hover:bg-gray-700 text-white rounded-l-lg py-2 px-2.5 h-10 flex items-center justify-center shadow-md -mt-1"
             aria-label="Scroll left"
           >
             <svg
@@ -75,7 +75,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         {/* Categories container */}
         <div
           ref={scrollContainerRef}
-          className="flex space-x-1 sm:space-x-2 pb-2 overflow-x-auto scrollbar-hide mx-8"
+          className="flex space-x-2 sm:space-x-3 pb-2 overflow-x-auto scrollbar-hide mx-12"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {categories.map((category) => (
@@ -97,7 +97,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         {showRightButton && (
           <button
             onClick={scrollRight}
-            className="absolute right-0 z-10 bg-gray-800 hover:bg-gray-700 text-white rounded-r-lg py-2 px-2 h-10 flex items-center justify-center shadow-md"
+            className="absolute right-1 z-10 bg-gray-800 hover:bg-gray-700 text-white rounded-r-lg py-2 px-2.5 h-10 flex items-center justify-center shadow-md -mt-1"
             aria-label="Scroll right"
           >
             <svg
